@@ -1,6 +1,12 @@
 #include "cocos2d.h"
 #include "Player.h"
-#include "Collision.h"
+#include "Obstacles.h"
+#include "Camera.h"
+
+// Velocity per seconds
+#define BASEVEL 50
+
+USING_NS_CC;
 
 class Game : public cocos2d::Layer
 {
@@ -11,6 +17,8 @@ class Game : public cocos2d::Layer
     void update(float dt) override;
     bool onContactBegin(PhysicsContact& contact);
  private:
+    CameraControl camera;
+    float time = 0.0;
     Player player;
     Node* wall;
 };

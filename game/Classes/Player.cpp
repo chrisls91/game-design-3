@@ -14,12 +14,12 @@ SpriteBatchNode* Player::createPlayer(float vel){
     spritebatch->addChild(Sprite);
     Sprite->setTag(3);
     auto physicsBody = PhysicsBody::createBox(Sprite->getContentSize(), PhysicsMaterial(1.0f,0.0f,0.f));
-    physicsBody->setVelocity(Vec2(vel,0));
+    physicsBody->setVelocity(Vec2(1,0));
     physicsBody->setContactTestBitmask(0x01);
     physicsBody->setRotationEnable(false);
-    //physicsBody->setGravityEnable(false);
     Sprite->setPhysicsBody(physicsBody);
     
+    // Running animation
     Vector<SpriteFrame*> animFrames(5);
 
     char str[100] = {0};
@@ -33,7 +33,7 @@ SpriteBatchNode* Player::createPlayer(float vel){
     Sprite->runAction( RepeatForever::create( Animate::create(animation) ) );
     Sprite->setPosition(100,163.9);
     Sprite->setFlippedX(true);
-    Velocity = vel;
+    normalVelocity = vel;
     return spritebatch;
 }
 
@@ -41,8 +41,9 @@ Sprite* Player::getSprite(){
   return Sprite;
 }
 
-float Player::getVelocity(){
-  return Velocity;
+float Player::getCurrentVelocity(){
+  Vec2 vel = Sprite->getPhysicsBody()->getVelocity();
+  return vel.x;
 }
 
 Point Player::getPosition(){
@@ -53,7 +54,7 @@ void Player::setPosition(float x, float y){
   Sprite->setPosition(x,y);
 }
 
-void Player::setVelocity(){
+void Player::updateVelocity(float velocity){
   Vec2 vel = Sprite->getPhysicsBody()->getVelocity();
-  Sprite->getPhysicsBody()->setVelocity(Vec2(Velocity,vel.y));
+  Sprite->getPhysicsBody()->setVelocity(Vec2(((vel.x+velocity>normalVelocity)?normalVelocity:(vel.x+velocity)),vel.y));
 }

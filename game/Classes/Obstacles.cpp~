@@ -1,0 +1,22 @@
+#include "Obstacles.h"
+
+USING_NS_CC;
+
+DrawNode* Obstacles::createObstacle()
+{
+   // Testing wall    
+  obstacle = DrawNode::create();
+  Vec2 vertices2[] = { 
+    Vec2(510,900), 
+    Vec2(510,0), 
+    Vec2(500,0), 
+    Vec2(500,900)
+  };   
+  obstacle->drawPolygon(vertices2, 4, Color4F(1.0f,0.3f,0.3f,1), 3, Color4F(0.2f,0.2f,0.2f,1));
+  physicsBody = PhysicsBody::createPolygon(vertices2, 4);
+  physicsBody->setDynamic(false);
+  obstacle->setTag(WALL);
+  physicsBody->setContactTestBitmask(0x01);
+  obstacle->setPhysicsBody(physicsBody);
+  return obstacle;
+}

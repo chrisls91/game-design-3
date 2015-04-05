@@ -1,15 +1,18 @@
 #include "cocos2d.h"
 
+#define MAXVELOCITY 300
+
 class Player
 {
  public:
   cocos2d::SpriteBatchNode* createPlayer(float vel);
   cocos2d::Sprite* getSprite();
-  float getVelocity();
+  float getNormalVelocity();
+  float getCurrentVelocity();
   cocos2d::Point getPosition();
   void setPosition(float x, float y);  
-  void setVelocity();
+  void updateVelocity(float velocity);
  private:
-  float Velocity;
+  float normalVelocity;
   cocos2d::Sprite* Sprite;
 };

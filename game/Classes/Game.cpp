@@ -45,56 +45,39 @@ bool Game::init()
   contactListener->onContactBegin = CC_CALLBACK_1(Game::onContactBegin, this);
   _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 
-  // Creating Ground   
-  auto rectWithBorder = DrawNode::create();
-  Vec2 vertices[] = { 
-    Vec2(3,100), 
-    Vec2(1000,100), 
-    Vec2(1000,4), 
-    Vec2(3,4)
-  };
-  
-  rectWithBorder->drawPolygon(vertices, 4, Color4F(1.0f,0.3f,0.3f,1), 3, Color4F(0.2f,0.2f,0.2f,1));
-  auto physicsBody = PhysicsBody::createPolygon(vertices,4);
-  addChild(rectWithBorder);
-  physicsBody->setDynamic(false);
-  rectWithBorder->setTag(GROUND);
-  physicsBody->setContactTestBitmask(0x02);
-  physicsBody->setVelocity(Vec2(-player.getVelocity(),0));
-  rectWithBorder->setPhysicsBody(physicsBody); 
-  
-  // Testing wall    
-  rectWithBorder = DrawNode::create();
-  Vec2 vertices2[] = { 
-    Vec2(510,900), 
-    Vec2(510,0), 
-    Vec2(500,0), 
-    Vec2(500,900)
-  };   
-  rectWithBorder->drawPolygon(vertices2, 4, Color4F(1.0f,0.3f,0.3f,1), 3, Color4F(0.2f,0.2f,0.2f,1));
-  physicsBody = PhysicsBody::createPolygon(vertices2, 4);
-  this->addChild(rectWithBorder);
-  physicsBody->setDynamic(false);
-  rectWithBorder->setTag(WALL);
-  physicsBody->setContactTestBitmask(0x01);
-  rectWithBorder->setPhysicsBody(physicsBody);
-  
-  // Create Player
+  Obstacles obs;
+  //create(float xi, float level, float size, int direction , int type)
+  // Creating GROUND
+  this->addChild(obs.create(0.0,0.0,1200.0,0,GROUND));
+  // Creating WALL
+  //this->addChild(obs.create(500.0,1.0,900.0,1,WALL));
+ 
+  // Creating Player
   this->addChild(player.createPlayer(150));
   
-  // Create Following Camera
-  auto size = Director::getInstance()->getWinSize();
-
-  // Code mess up with the following camera
-  //this->runAction(Follow::create(player.getSprite(), Rect(-500,0,size.width*100000, size.height*2)));
+  Point p = player.getPosition();
+  
+  // Creating Camera
+  auto size = Director::getInstance()->getWinSize();  
+  this->setCameraMask((unsigned short)CameraFlag::USER2, true);
+  camera.create(size);
+  this->addChild(camera.getCamera());
 
   this->scheduleUpdate();
   return true;
 }
 
-void Game::update(float dt){    
-  player.setVelocity();
+void Game::update(float dt){ 
+  // Updating camera, following player
   Point p = player.getPosition();
+  camera.update(Vec3(p.x, p.y, 0));
+  
+  // Updating player velocity
+  player.updateVelocity(dt*BASEVEL);
+  
+  // Timer
+  time += dt;
+  //cout << total << endl;
   Vec2 bp = player.getSprite()->getPhysicsBody()->getPosition();
   if(p.y < 0){
     player.setPosition(100,163.9);

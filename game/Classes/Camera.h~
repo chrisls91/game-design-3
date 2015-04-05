@@ -1,0 +1,10 @@
+#include "cocos2d.h"
+
+Class Camera
+{
+ public:
+  void create();
+  void update();
+ private:
+  cocos2d::Camera* camera;
+};
