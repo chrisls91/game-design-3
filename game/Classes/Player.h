@@ -1,6 +1,6 @@
 #include "cocos2d.h"
 
-#define MAXVELOCITY 300
+#define MAXVELOCITY 600
 
 class Player
 {
@@ -12,7 +12,12 @@ class Player
   cocos2d::Point getPosition();
   void setPosition(float x, float y);  
   void updateVelocity(float velocity);
+  void jump();
+  bool isJumping();
+  void setJumping(bool x);
  private:
+  cocos2d::SpriteFrameCache* cache;
   float normalVelocity;
   cocos2d::Sprite* Sprite;
+  bool jumping = false;
 };

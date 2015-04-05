@@ -12,14 +12,16 @@ bool Game::onContactBegin(PhysicsContact& contact)
     auto nodeB = contact.getShapeB()->getBody()->getNode();
     if (nodeA && nodeB)
     {
-        if (nodeA->getTag() == WALL)
+        if (nodeA->getTag() == WALL_TAG)
         {
 	  cout << "WALL" << endl;
         }
-        else if (nodeB->getTag() == WALL)
+        else if (nodeB->getTag() == WALL_TAG)
         {
 	  cout << "WALL" << endl;
         }
+	else if(nodeB->getTag() == GROUND_TAG || nodeA->getTag() == GROUND_TAG)
+	  player.setJumping(false);
     }
 
     return true;
@@ -30,6 +32,8 @@ Scene* Game::createScene()
     auto scene = Scene::createWithPhysics();
     auto layer = Game::create();
     scene->addChild(layer);   
+    // Increasing Gravity
+    scene->getPhysicsWorld()->setGravity(Vec2(0,-150));
     return scene;
 }
 
@@ -47,13 +51,17 @@ bool Game::init()
 
   Obstacles obs;
   //create(float xi, float level, float size, int direction , int type)
-  // Creating GROUND
-  this->addChild(obs.create(0.0,0.0,1200.0,0,GROUND));
+  // Creating GROUND 1
+  this->addChild(obs.create(0.0,0.0,1200.0,0,GROUND_TAG));
+  // Creating GROUND 2
+  this->addChild(obs.create(1500,0.0,300.0,0,GROUND_TAG));
+  // Creating GROUND 3
+  this->addChild(obs.create(2385.0,0.0,1200.0,0,GROUND_TAG));
   // Creating WALL
-  //this->addChild(obs.create(500.0,1.0,900.0,1,WALL));
+  this->addChild(obs.create(3000.0,1.0,900.0,1,WALL_TAG));
  
   // Creating Player
-  this->addChild(player.createPlayer(150));
+  this->addChild(player.createPlayer(250));
   
   Point p = player.getPosition();
   
@@ -63,6 +71,9 @@ bool Game::init()
   camera.create(size);
   this->addChild(camera.getCamera());
 
+  // Creating Keyboard listener
+  this->_eventDispatcher->addEventListenerWithSceneGraphPriority(receiver.create(),this);
+
   this->scheduleUpdate();
   return true;
 }
@@ -71,25 +82,23 @@ void Game::update(float dt){
   // Updating camera, following player
   Point p = player.getPosition();
   camera.update(Vec3(p.x, p.y, 0));
-  
+
   // Updating player velocity
-  player.updateVelocity(dt*BASEVEL);
+  player.updateVelocity(dt*BASE_VEL);
   
   // Timer
   time += dt;
-  //cout << total << endl;
+  cout << time << endl;
+  
+  //Player jumping
+  if(receiver.IsKeyPressed(JUMP_KEY) && !player.isJumping())
+    player.jump();
+
+  // Reseting player position if it died
   Vec2 bp = player.getSprite()->getPhysicsBody()->getPosition();
   if(p.y < 0){
     player.setPosition(100,163.9);
     p = player.getPosition();
+    time = 0.0;
   }
-  /*
-  cout << "============" << endl;
-  cout << "Sprite:" << p.x << " " << p.y << endl;
-  cout << "Body:" << bp.x << " " << bp.y << endl;
-  cout << "Total:" << p.x - bp.x << " " << p.y - bp.y << endl;
-  cout << "============" << endl;
-  */
-  //player.setPosition(p.x + player.getVelocity() * dt, p.y );
-  //player.setPosition(p.x, p.y);
 }

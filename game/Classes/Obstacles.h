@@ -1,10 +1,10 @@
 #include "cocos2d.h"
 
-#define WALL 1
-#define GROUND 2
-#define PLAYER 3
-#define SIZE 40
-#define JUMP 100
+#define WALL_TAG 1
+#define GROUND_TAG 2
+#define PLAYER_TAG 3
+#define OBSTACLE_SIZE 40
+#define JUMP_HEIGHT 100
 
 class Obstacles
 {

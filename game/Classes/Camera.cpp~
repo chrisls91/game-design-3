@@ -1,9 +1,0 @@
-
-
-void Camera::create(){
-  camera = Camera::create();
-}
-
-void update(){
-  camera->getPosition();;
-}

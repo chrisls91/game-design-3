@@ -15,15 +15,15 @@ DrawNode* Obstacles::create(float xi, float level, float size, int direction , i
 {
   DrawNode* obstacle = DrawNode::create();
   float x, yi , y;
-  if(direction && type != GROUND){
-    x = xi + SIZE;
-    yi = level * JUMP;
+  if(direction && type != GROUND_TAG){
+    x = xi + OBSTACLE_SIZE;
+    yi = level * JUMP_HEIGHT;
     y = yi + size;
   }
   else{
     x = xi + size;
-    yi = level * JUMP;
-    y = yi + ((type==GROUND)?96:SIZE);
+    yi = level * JUMP_HEIGHT;
+    y = yi + ((type==GROUND_TAG)?96:OBSTACLE_SIZE);
   }
   Vec2 vertices2[] = { 
     Vec2(x,y), 
@@ -34,7 +34,7 @@ DrawNode* Obstacles::create(float xi, float level, float size, int direction , i
   obstacle->drawPolygon(vertices2, 4, Color4F(1.0f,0.3f,0.3f,1), 3, Color4F(0.2f,0.2f,0.2f,1));
   auto physicsBody = PhysicsBody::createPolygon(vertices2, 4);
   physicsBody->setDynamic(false);
-  physicsBody->setContactTestBitmask(((type==GROUND)?0x01:0x02));
+  physicsBody->setContactTestBitmask(0x01);
   obstacle->setTag(type);
   obstacle->setPhysicsBody(physicsBody);
   return obstacle;

@@ -2,9 +2,10 @@
 #include "Player.h"
 #include "Obstacles.h"
 #include "Camera.h"
+#include "KeyboardReceiver.h"
 
 // Velocity per seconds
-#define BASEVEL 50
+#define BASE_VEL 100
 
 USING_NS_CC;
 
@@ -18,6 +19,7 @@ class Game : public cocos2d::Layer
     bool onContactBegin(PhysicsContact& contact);
  private:
     CameraControl camera;
+    Receiver receiver;
     float time = 0.0;
     Player player;
     Node* wall;
