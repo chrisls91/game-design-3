@@ -15,6 +15,8 @@ class Player
   void jump();
   bool isJumping();
   void setJumping(bool x);
+  void slide();
+  void endSlide();
  private:
   cocos2d::SpriteFrameCache* cache;
   float normalVelocity;

@@ -23,4 +23,5 @@ class Game : public cocos2d::Layer
     float time = 0.0;
     Player player;
     Node* wall;
+    bool status = false;
 };
