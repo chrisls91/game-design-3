@@ -33,7 +33,7 @@ Scene* Game::createScene()
     auto layer = Game::create();
     scene->addChild(layer);   
     // Increasing Gravity
-    scene->getPhysicsWorld()->setGravity(Vec2(0,-150));
+    scene->getPhysicsWorld()->setGravity(Vec2(0,-500));
     return scene;
 }
 
@@ -53,13 +53,13 @@ bool Game::init()
   //create(float xi, float level, float size, int direction , int type)
   // Creating GROUND 1
   this->addChild(obs.create(0.0,0.0,1200.0,0,GROUND_TAG));
+  // Creating WALL 2
+  this->addChild(obs.create(700.0,1.5,900.0,1,WALL_TAG));
   // Creating GROUND 2
-  this->addChild(obs.create(1500,0.0,300.0,0,GROUND_TAG));
-  // Creating GROUND 3
-  this->addChild(obs.create(2385.0,0.0,1200.0,0,GROUND_TAG));
-  // Creating WALL
-  this->addChild(obs.create(3000.0,1.0,900.0,1,WALL_TAG));
- 
+  this->addChild(obs.create(1500,0.0,800.0,0,GROUND_TAG));
+  // Creating GROUND2 3
+  this->addChild(obs.create(2250.0,2,1200.0,0,WALL_TAG));
+  
   // Creating Player
   this->addChild(player.createPlayer(250));
   
@@ -93,7 +93,14 @@ void Game::update(float dt){
   //Player jumping
   if(receiver.IsKeyPressed(JUMP_KEY) && !player.isJumping())
     player.jump();
-
+  else if(receiver.IsKeyPressed(SLIDE_KEY)){
+    player.slide();
+    status = true;
+  }
+  else if(status){
+    player.endSlide();
+    status = false;
+  }
   // Reseting player position if it died
   Vec2 bp = player.getSprite()->getPhysicsBody()->getPosition();
   if(p.y < 0){

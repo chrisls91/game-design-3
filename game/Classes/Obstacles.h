@@ -4,7 +4,7 @@
 #define GROUND_TAG 2
 #define PLAYER_TAG 3
 #define OBSTACLE_SIZE 40
-#define JUMP_HEIGHT 100
+#define JUMP_HEIGHT 115
 
 class Obstacles
 {
