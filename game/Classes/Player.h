@@ -17,7 +17,8 @@ class Player
   void setJumping(int x);
   void slide();
   void endSlide();
-  void resetVelocity();
+  void resetPlayer(float x, float y);
+  void stopPlayer();
  private:
   cocos2d::SpriteFrameCache* cache;
   float normalVelocity;

@@ -56,13 +56,20 @@ void Player::setPosition(float x, float y){
   Sprite->setPosition(x,y);
 }
 
-void Player::resetVelocity(){
+void Player::resetPlayer(float x, float y){
+  setPosition(x,y);
+  Sprite->resumeSchedulerAndActions();
   Sprite->getPhysicsBody()->setVelocity(Vec2(100,0));
 }
 
 void Player::updateVelocity(float velocity){
   Vec2 vel = Sprite->getPhysicsBody()->getVelocity();
   Sprite->getPhysicsBody()->setVelocity(Vec2(((vel.x+velocity>normalVelocity)?normalVelocity:(vel.x+velocity)),vel.y));
+}
+
+void Player::stopPlayer(){
+  Sprite->pauseSchedulerAndActions();
+  Sprite->getPhysicsBody()->setVelocity(Vec2(0,0));
 }
 
 void Player::setJumping(int x){

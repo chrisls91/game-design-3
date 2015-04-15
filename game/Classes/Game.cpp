@@ -5,6 +5,7 @@
 USING_NS_CC;
 using namespace std;
 
+
 // Collision Detection
 bool Game::onContactBegin(PhysicsContact& contact)
 {
@@ -123,6 +124,14 @@ bool Game::init()
 }
 
 void Game::update(float dt){ 
+  if(paused){
+    if(receiver.IsKeyPressed(SLIDE_KEY)){
+      player.resetPlayer(100,163.9);
+      time = 0.0;
+      paused = false;
+    }
+    return;
+  }
   // Updating camera, following player
   Point p = player.getPosition();
   camera.update(Vec3(p.x, p.y, 0));
@@ -131,10 +140,11 @@ void Game::update(float dt){
   player.updateVelocity(dt*BASE_VEL);
 
   // Timer
-  time += dt;
-  int min = (int) time/60;
-  int sec = (int) time%60;
-  label->setString(((min>0)?to_string(min) + ":":"") + to_string(sec));
+  time += dt*1000;
+  int ms = (int) time%1000;
+  int sec = (int) (time/1000)%60;
+  int min = (time/1000)/60;
+  label->setString(((min>0)?to_string(min) + ":":"") + to_string(sec) + ":" + to_string(ms));
   
   //Player jumping
   if(receiver.IsKeyPressed(JUMP_KEY)){
@@ -155,9 +165,11 @@ void Game::update(float dt){
   // Reseting player position if it died
   Vec2 bp = player.getSprite()->getPhysicsBody()->getPosition();
   if(p.y < 0){
-    player.setPosition(100,163.9);
-    player.resetVelocity();
-    p = player.getPosition();
+    player.resetPlayer(100,163.9);
     time = 0.0;
+  }
+  if(p.x > 10930){
+    paused = true;
+    player.stopPlayer();
   }
 }

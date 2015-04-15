@@ -18,7 +18,7 @@ class Game : public cocos2d::Layer
     void update(float dt) override;
     bool onContactBegin(PhysicsContact& contact);
  private:
-    int cameraLvl = 0; 
+    bool paused = false;
     CameraControl camera;
     Receiver receiver;
     float time = 0.0;
