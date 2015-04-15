@@ -2,6 +2,7 @@
 #include <iostream>
 
 USING_NS_CC;
+using namespace std;
 
 SpriteBatchNode* Player::createPlayer(float vel){
    // Creating Caracter and Physics  
@@ -13,7 +14,8 @@ SpriteBatchNode* Player::createPlayer(float vel){
     Sprite = Sprite::createWithSpriteFrameName("jump-9.png");
     spritebatch->addChild(Sprite);
     Sprite->setTag(3);
-    auto physicsBody = PhysicsBody::createBox(Sprite->getContentSize(), PhysicsMaterial(1.0f,0.0f,0.f));
+    //Sprite->getContentSize()
+    auto physicsBody = PhysicsBody::createBox(Size(60,128), PhysicsMaterial(1.0f,0.0f,0.f));
     physicsBody->setVelocity(Vec2(80,0));
     physicsBody->setContactTestBitmask(0x01);
     physicsBody->setRotationEnable(false);
@@ -68,7 +70,7 @@ bool Player::isJumping(){
 }
 
 void Player::jump(){
-  // Running animation
+  // Jumping animation
   Vector<SpriteFrame*> animFrames(5);
   
   char str[100] = {0};
@@ -80,6 +82,31 @@ void Player::jump(){
 
   Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
   //Sprite->runAction( Animate::create(animation) );
-  Sprite->getPhysicsBody()->setVelocity(Vec2(getCurrentVelocity(), 150));
+  Sprite->getPhysicsBody()->setVelocity(Vec2(getCurrentVelocity(), 115 * 2.5));
   jumping = true;
+}
+
+void Player::slide(){
+  
+  // Sliding animation
+  Vector<SpriteFrame*> animFrames(1);
+  
+  char str[100] = {0};
+  for(int i = 8; i < 9; i++) {
+    sprintf(str, "jump-%d.png", i);
+    SpriteFrame* frame = cache->getSpriteFrameByName( str );
+    animFrames.pushBack(frame);
+  }
+
+  Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
+  Sprite->runAction( Animate::create(animation) );  
+  Sprite->setRotation(-90);
+  Vec2 p = Sprite->getPhysicsBody()->getPosition();
+  setPosition(p.x, p.y - 1.8);
+}
+
+void Player::endSlide(){
+  Vec2 p = Sprite->getPhysicsBody()->getPosition();
+  setPosition(p.x, p.y + 50);
+  Sprite->setRotation(0);
 }
