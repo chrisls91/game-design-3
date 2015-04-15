@@ -11,19 +11,31 @@ USING_NS_CC;
  *   type = Definifion types on Obstacles.h
 */
 
-DrawNode* Obstacles::create(float xi, float level, float size, int direction , int type)
+DrawNode* Obstacles::create(float xi, float level, float size, int type)
 {
   DrawNode* obstacle = DrawNode::create();
   float x, yi , y;
-  if(direction && type != GROUND_TAG){
-    x = xi + OBSTACLE_SIZE;
-    yi = level * JUMP_HEIGHT;
+  if(type == WALL_TAG){
+    x = xi + WALL_SIZE;
+    yi = lastGround + (level * JUMP_HEIGHT);
     y = yi + size;
+  }
+  else if(type == GROUND_TAG){
+    x = xi + size;
+    yi = 0;
+    y = yi + GROUND_SIZE;
+    lastGround = y;
+    lastSize = GROUND_SIZE;
   }
   else{
     x = xi + size;
-    yi = level * JUMP_HEIGHT;
-    y = yi + ((type==GROUND_TAG)?96:OBSTACLE_SIZE);
+    if(level)
+      yi = lastGround + (JUMP_HEIGHT * level);
+    else
+      yi = lastGround - lastSize;
+    y = yi + WALL_SIZE;
+    lastGround = y;
+    lastSize = WALL_SIZE;
   }
   Vec2 vertices2[] = { 
     Vec2(x,y), 

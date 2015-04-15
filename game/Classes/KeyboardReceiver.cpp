@@ -36,3 +36,7 @@ EventListenerKeyboard* Receiver::create(){
 bool Receiver::IsKeyPressed(int key){
   return keys[key];
 }
+
+void Receiver::releaseKey(int key){
+  keys[key] = false;
+}
