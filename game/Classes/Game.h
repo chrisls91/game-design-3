@@ -2,10 +2,12 @@
 #include "Player.h"
 #include "Obstacles.h"
 #include "Camera.h"
+#include "Pickups.h"
 #include "KeyboardReceiver.h"
+#include "SimpleAudioEngine.h"
 
 // Velocity per seconds
-#define BASE_VEL 50
+#define BASE_VEL 100
 
 USING_NS_CC;
 
@@ -17,6 +19,7 @@ class Game : public cocos2d::Layer
     CREATE_FUNC(Game);
     void update(float dt) override;
     bool onContactBegin(PhysicsContact& contact);
+    void reloadPickups();
  private:
     bool paused = false;
     CameraControl camera;
