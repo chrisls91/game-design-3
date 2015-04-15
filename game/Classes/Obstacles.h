@@ -14,5 +14,5 @@ class Obstacles
   cocos2d::DrawNode* create(float xi, float level, float size, int type);
  private:
   float lastGround = 0;
-  float lastSize = 0
+  float lastSize = 0;
 };
