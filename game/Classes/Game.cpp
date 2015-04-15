@@ -168,6 +168,8 @@ void Game::update(float dt){
       player.resetPlayer(100,163.9);
       time = 0.0;
       paused = false;
+      auto tmpScene = this->createScene();
+      Director::getInstance()->replaceScene(tmpScene);
     }
     return;
   }
@@ -182,7 +184,7 @@ void Game::update(float dt){
   else{
     player.updateVelocity(dt*BASE_VEL);
   }
-
+  
   // Timer
   time += dt*1000;
   int ms = (int) time%1000;
