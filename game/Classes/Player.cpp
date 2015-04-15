@@ -16,7 +16,7 @@ SpriteBatchNode* Player::createPlayer(float vel){
     Sprite->setTag(3);
     //Sprite->getContentSize()
     auto physicsBody = PhysicsBody::createBox(Size(60,128), PhysicsMaterial(1.0f,0.0f,0.f));
-    physicsBody->setVelocity(Vec2(80,0));
+    physicsBody->setVelocity(Vec2(100,0));
     physicsBody->setContactTestBitmask(0x01);
     physicsBody->setRotationEnable(false);
     Sprite->setPhysicsBody(physicsBody);
@@ -56,20 +56,31 @@ void Player::setPosition(float x, float y){
   Sprite->setPosition(x,y);
 }
 
+void Player::resetPlayer(float x, float y){
+  setPosition(x,y);
+  Sprite->resumeSchedulerAndActions();
+  Sprite->getPhysicsBody()->setVelocity(Vec2(100,0));
+}
+
 void Player::updateVelocity(float velocity){
   Vec2 vel = Sprite->getPhysicsBody()->getVelocity();
   Sprite->getPhysicsBody()->setVelocity(Vec2(((vel.x+velocity>normalVelocity)?normalVelocity:(vel.x+velocity)),vel.y));
 }
 
-void Player::setJumping(bool x){
+void Player::stopPlayer(){
+  Sprite->pauseSchedulerAndActions();
+  Sprite->getPhysicsBody()->setVelocity(Vec2(0,0));
+}
+
+void Player::setJumping(int x){
   jumping = x;
 }
 
-bool Player::isJumping(){
+int Player::isJumping(){
   return jumping; //((Sprite->getPhysicsBody()->getVelocity().y != 0)?true:false);
 }
 
-void Player::jump(){
+void Player::jump(int n){
   // Jumping animation
   Vector<SpriteFrame*> animFrames(5);
   
@@ -82,8 +93,8 @@ void Player::jump(){
 
   Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
   //Sprite->runAction( Animate::create(animation) );
-  Sprite->getPhysicsBody()->setVelocity(Vec2(getCurrentVelocity(), 115 * 2.5));
-  jumping = true;
+  Sprite->getPhysicsBody()->setVelocity(Vec2(getCurrentVelocity(), 150 * 2.5));
+  jumping = n;
 }
 
 void Player::slide(){

@@ -7,6 +7,7 @@ class Receiver{
  public:
   cocos2d::EventListenerKeyboard* create();
   bool IsKeyPressed(int key);
+  void releaseKey(int key);
  private:
   cocos2d::EventListenerKeyboard* receiver;
   // keys[JumpKey|SlideKey]
