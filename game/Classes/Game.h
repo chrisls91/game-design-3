@@ -5,7 +5,7 @@
 #include "KeyboardReceiver.h"
 
 // Velocity per seconds
-#define BASE_VEL 100
+#define BASE_VEL 50
 
 USING_NS_CC;
 
@@ -18,10 +18,13 @@ class Game : public cocos2d::Layer
     void update(float dt) override;
     bool onContactBegin(PhysicsContact& contact);
  private:
+    bool paused = false;
     CameraControl camera;
     Receiver receiver;
     float time = 0.0;
     Player player;
     Node* wall;
     bool status = false;
+    Size winSize;
+    Label* label;
 };

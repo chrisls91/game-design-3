@@ -5,6 +5,7 @@
 USING_NS_CC;
 using namespace std;
 
+
 // Collision Detection
 bool Game::onContactBegin(PhysicsContact& contact)
 {
@@ -14,16 +15,15 @@ bool Game::onContactBegin(PhysicsContact& contact)
     {
         if (nodeA->getTag() == WALL_TAG)
         {
-	  cout << "WALL" << endl;
+	  //cout << "WALL" << endl;
         }
         else if (nodeB->getTag() == WALL_TAG)
         {
-	  cout << "WALL" << endl;
+	  //cout << "WALL" << endl;
         }
-	else if(nodeB->getTag() == GROUND_TAG || nodeA->getTag() == GROUND_TAG)
-	  player.setJumping(false);
+	else if(nodeB->getTag() == GROUND_TAG || nodeA->getTag() == GROUND_TAG || nodeB->getTag() == GROUND2_TAG || nodeA->getTag() == GROUND2_TAG)
+	  player.setJumping(0);
     }
-
     return true;
 }
 
@@ -50,49 +50,110 @@ bool Game::init()
   _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 
   Obstacles obs;
-  //create(float xi, float level, float size, int direction , int type)
+  // lvl1
+  //create(float xi, float level, float size, int type)
   // Creating GROUND 1
-  this->addChild(obs.create(0.0,0.0,1200.0,0,GROUND_TAG));
-  // Creating WALL 2
-  this->addChild(obs.create(700.0,1.5,900.0,1,WALL_TAG));
+  this->addChild(obs.create(0.0, 0, 1200.0,GROUND_TAG));
   // Creating GROUND 2
-  this->addChild(obs.create(1500,0.0,800.0,0,GROUND_TAG));
-  // Creating GROUND2 3
-  this->addChild(obs.create(2250.0,2,1200.0,0,WALL_TAG));
+  this->addChild(obs.create(1500, 0, 4000.0,GROUND_TAG));
+  // Creating GROUND 3
+  this->addChild(obs.create(6000, 0, 2000.0,GROUND_TAG));
+  // Creating WALL 1
+  this->addChild(obs.create(700.0, 0.5, 900.0,WALL_TAG));
+  // Creating WALL 2
+  this->addChild(obs.create(2500.0, 0.5, 63.0,WALL_TAG));
+  // Creating WALL 4
+  this->addChild(obs.create(4300.0, 0, 100.0,WALL_TAG));
+  // Creating WALL 5
+  this->addChild(obs.create(4800.0, 0.5, 100.0,WALL_TAG));
+  // Creating WALL 6
+  this->addChild(obs.create(6800.0, 0, 75.0,WALL_TAG));
+  // Creating WALL 7
+  this->addChild(obs.create(7000.0, 1, 320.0,WALL_TAG));
+  // Creating WALL 5
+  this->addChild(obs.create(7200.0, 0, 100.0,WALL_TAG));
   
+
+  // lvl 2
+  // Creating GROUND2 1
+  this->addChild(obs.create(2250.0, 1, 1200.0,GROUND2_TAG));
+  // Creating WALL 1
+  this->addChild(obs.create(2800.0, 0.5, 400.0,WALL_TAG));
+  // Creating GROUND2 2
+  this->addChild(obs.create(7950.0, 0, 3000.0,GROUND2_TAG));
+  
+
+  // lvl 3
+  // Creating GROUND2 1
+  this->addChild(obs.create(3400.0, 1, 1000.0,GROUND2_TAG));
+  // Creating WALL 1
+  this->addChild(obs.create(3800.0, 0.5, 500.0,WALL_TAG));
+
+  // lvl 4
+  // Creating GROUND2 1
+  this->addChild(obs.create(4400.0, 1, 1200.0,GROUND2_TAG));
+  // Creating GROUND2 1
+  this->addChild(obs.create(6000.0, 0, 1900.0,GROUND2_TAG));
+  // Creating WALL 1
+  this->addChild(obs.create(5200.0, 0, 75.0,WALL_TAG));
+  // Creating WALL 2
+  this->addChild(obs.create(5200.0, 1.5, 350.0,WALL_TAG));
+
+
   // Creating Player
-  this->addChild(player.createPlayer(250));
+  this->addChild(player.createPlayer(350));
   
   Point p = player.getPosition();
   
   // Creating Camera
-  auto size = Director::getInstance()->getWinSize();  
+  winSize = Director::getInstance()->getWinSize();  
   this->setCameraMask((unsigned short)CameraFlag::USER2, true);
-  camera.create(size);
+  camera.create(winSize);
   this->addChild(camera.getCamera());
 
+  //Creating timer display
+  label = Label::createWithTTF("","fonts/arial.ttf",32);
+  label->setPosition(Point(winSize.width/2, winSize.height-50));
+  this->addChild(label);
+  
   // Creating Keyboard listener
   this->_eventDispatcher->addEventListenerWithSceneGraphPriority(receiver.create(),this);
-
+  
   this->scheduleUpdate();
   return true;
 }
 
 void Game::update(float dt){ 
+  if(paused){
+    if(receiver.IsKeyPressed(SLIDE_KEY)){
+      player.resetPlayer(100,163.9);
+      time = 0.0;
+      paused = false;
+    }
+    return;
+  }
   // Updating camera, following player
   Point p = player.getPosition();
   camera.update(Vec3(p.x, p.y, 0));
 
   // Updating player velocity
   player.updateVelocity(dt*BASE_VEL);
-  
+
   // Timer
-  time += dt;
-  cout << time << endl;
+  time += dt*1000;
+  int ms = (int) time%1000;
+  int sec = (int) (time/1000)%60;
+  int min = (time/1000)/60;
+  label->setString(((min>0)?to_string(min) + ":":"") + to_string(sec) + ":" + to_string(ms));
   
   //Player jumping
-  if(receiver.IsKeyPressed(JUMP_KEY) && !player.isJumping())
-    player.jump();
+  if(receiver.IsKeyPressed(JUMP_KEY)){
+    receiver.releaseKey(JUMP_KEY);
+    if(!player.isJumping())
+      player.jump(1);
+    else if(player.isJumping() == 1)
+      player.jump(2);
+  }
   else if(receiver.IsKeyPressed(SLIDE_KEY)){
     player.slide();
     status = true;
@@ -104,8 +165,11 @@ void Game::update(float dt){
   // Reseting player position if it died
   Vec2 bp = player.getSprite()->getPhysicsBody()->getPosition();
   if(p.y < 0){
-    player.setPosition(100,163.9);
-    p = player.getPosition();
+    player.resetPlayer(100,163.9);
     time = 0.0;
+  }
+  if(p.x > 10930){
+    paused = true;
+    player.stopPlayer();
   }
 }
