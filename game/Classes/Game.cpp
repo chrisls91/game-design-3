@@ -21,6 +21,20 @@ bool Game::onContactBegin(PhysicsContact& contact)
         {
 	  //cout << "WALL" << endl;
         }
+        else if (nodeA->getTag() == PICKUP_TAG and nodeB->getTag() == PLAYER_TAG){
+          player.updateVelocity(player.getCurrentVelocity()*2.5);
+          nodeA->getPhysicsBody()->removeFromWorld();
+          auto parentNode = nodeA->getParent();
+          nodeA->removeFromParentAndCleanup(true);
+          parentNode->removeFromParentAndCleanup(true);
+        }
+        else if (nodeB->getTag() == PICKUP_TAG and nodeA->getTag() == PLAYER_TAG){
+          player.updateVelocity(player.getCurrentVelocity()*2.5);
+          nodeB->getPhysicsBody()->removeFromWorld();
+          auto parentNode = nodeB->getParent();
+          nodeB->removeFromParentAndCleanup(true);
+          parentNode->removeFromParentAndCleanup(true);
+        }
 	else if(nodeB->getTag() == GROUND_TAG || nodeA->getTag() == GROUND_TAG || nodeB->getTag() == GROUND2_TAG || nodeA->getTag() == GROUND2_TAG)
 	  player.setJumping(0);
     }
@@ -50,6 +64,7 @@ bool Game::init()
   _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 
   Obstacles obs;
+  SpeedPickup pickup;
   // lvl1
   //create(float xi, float level, float size, int type)
   // Creating GROUND 1
@@ -64,6 +79,8 @@ bool Game::init()
   this->addChild(obs.create(2500.0, 0.5, 63.0,WALL_TAG));
   // Creating WALL 4
   this->addChild(obs.create(4300.0, 0, 100.0,WALL_TAG));
+  // Creating pickup 1
+  this->addChild(pickup.createSpeedPickup(4320.0, 250));
   // Creating WALL 5
   this->addChild(obs.create(4800.0, 0.5, 100.0,WALL_TAG));
   // Creating WALL 6
@@ -81,6 +98,10 @@ bool Game::init()
   this->addChild(obs.create(2800.0, 0.5, 400.0,WALL_TAG));
   // Creating GROUND2 2
   this->addChild(obs.create(7950.0, 0, 3000.0,GROUND2_TAG));
+  // Creating pickup1
+  this->addChild(pickup.createSpeedPickup(8200,3080));
+  this->addChild(pickup.createSpeedPickup(8600, 3080));
+  this->addChild(pickup.createSpeedPickup(8900, 3080));
   
 
   // lvl 3
@@ -88,6 +109,8 @@ bool Game::init()
   this->addChild(obs.create(3400.0, 1, 1000.0,GROUND2_TAG));
   // Creating WALL 1
   this->addChild(obs.create(3800.0, 0.5, 500.0,WALL_TAG));
+  //Creating Pickup1
+  this->addChild(pickup.createSpeedPickup(3800.0, 450));
 
   // lvl 4
   // Creating GROUND2 1
@@ -98,8 +121,11 @@ bool Game::init()
   this->addChild(obs.create(5200.0, 0, 75.0,WALL_TAG));
   // Creating WALL 2
   this->addChild(obs.create(5200.0, 1.5, 350.0,WALL_TAG));
-
-
+  // Creating pickup 1
+  this->addChild(pickup.createSpeedPickup(5800, 375.0));
+  // Creating pickup 2
+  this->addChild(pickup.createSpeedPickup(6000, 1000));
+  
   // Creating Player
   this->addChild(player.createPlayer(350));
   
@@ -119,8 +145,21 @@ bool Game::init()
   // Creating Keyboard listener
   this->_eventDispatcher->addEventListenerWithSceneGraphPriority(receiver.create(),this);
   
+  //Start BGM
+  CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("bg1.mp3", true);
+  
   this->scheduleUpdate();
   return true;
+}
+
+void Game::reloadPickups(){
+  //todo: Have a for loop that reads the number of pickups
+  //and their coordinates from a file
+  SpeedPickup pickup;
+  auto node=pickup.createSpeedPickup(900.0, 80);
+  this->addChild(node);
+  node=pickup.createSpeedPickup(400.0, 120);
+  this->addChild(node);
 }
 
 void Game::update(float dt){ 
@@ -137,7 +176,12 @@ void Game::update(float dt){
   camera.update(Vec3(p.x, p.y, 0));
 
   // Updating player velocity
-  player.updateVelocity(dt*BASE_VEL);
+  if(player.getCurrentVelocity()>player.getNormalVelocity()){
+    player.updateVelocity(dt*(-BASE_VEL));
+  }
+  else{
+    player.updateVelocity(dt*BASE_VEL);
+  }
 
   // Timer
   time += dt*1000;
@@ -149,10 +193,14 @@ void Game::update(float dt){
   //Player jumping
   if(receiver.IsKeyPressed(JUMP_KEY)){
     receiver.releaseKey(JUMP_KEY);
-    if(!player.isJumping())
+    if(!player.isJumping()){
+      CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("jump.wav");
       player.jump(1);
-    else if(player.isJumping() == 1)
+    }
+    else if(player.isJumping() == 1){
+      CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("jump.wav");
       player.jump(2);
+    }
   }
   else if(receiver.IsKeyPressed(SLIDE_KEY)){
     player.slide();
@@ -167,6 +215,8 @@ void Game::update(float dt){
   if(p.y < 0){
     player.resetPlayer(100,163.9);
     time = 0.0;
+    auto tmpScene = this->createScene();
+    Director::getInstance()->replaceScene(tmpScene);
   }
   if(p.x > 10930){
     paused = true;
