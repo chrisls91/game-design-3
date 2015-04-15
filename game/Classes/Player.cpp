@@ -52,6 +52,10 @@ Point Player::getPosition(){
   return Sprite->getPosition();
 }
 
+float Player::getNormalVelocity(){
+    return normalVelocity;
+}
+
 void Player::setPosition(float x, float y){
   Sprite->setPosition(x,y);
 }
@@ -64,7 +68,7 @@ void Player::resetPlayer(float x, float y){
 
 void Player::updateVelocity(float velocity){
   Vec2 vel = Sprite->getPhysicsBody()->getVelocity();
-  Sprite->getPhysicsBody()->setVelocity(Vec2(((vel.x+velocity>normalVelocity)?normalVelocity:(vel.x+velocity)),vel.y));
+  Sprite->getPhysicsBody()->setVelocity(Vec2(((vel.x+velocity>MAXVELOCITY)?MAXVELOCITY:(vel.x+velocity)),vel.y));
 }
 
 void Player::stopPlayer(){

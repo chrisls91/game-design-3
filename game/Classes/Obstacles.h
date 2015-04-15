@@ -4,6 +4,7 @@
 #define GROUND_TAG 2
 #define GROUND2_TAG 3
 #define PLAYER_TAG 3
+#define PICKUP_TAG 4
 #define GROUND_SIZE 96
 #define WALL_SIZE 25
 #define JUMP_HEIGHT 135
