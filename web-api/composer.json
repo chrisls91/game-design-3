@@ -1,0 +1,12 @@
+{
+  "autoload": {
+    "psr-4": {
+      "GameAPI\\": "app/"
+    }
+  },
+  "require": {
+    "luracast/restler": "3.0.0",
+    "robmorgan/phinx": "0.4.3",
+    "j4mie/paris": "1.5.4"
+  }
+}
