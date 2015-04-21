@@ -1,3 +1,4 @@
+#pragma once
 #include "cocos2d.h"
 
 #define MAXVELOCITY 800

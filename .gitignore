@@ -1,3 +1,10 @@
 game/*
 !game/Classes/
 !game/Resources/
+game/Classes/Collision.cpp
+game/Classes/Collision.h
+game/Classes/HelloWorldScene.cpp
+game/Classes/HelloWorldScene.h
+game/Resources/CloseNormal.png
+game/Resources/CloseSelected.png
+game/Resources/HelloWorld.png
