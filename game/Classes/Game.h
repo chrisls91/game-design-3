@@ -21,6 +21,13 @@ class Game : public cocos2d::Layer
     void update(float dt) override;
     bool onContactBegin(PhysicsContact& contact);
     void reloadPickups();
+    
+    //Touchscreen callbacks
+#if ((CC_TARGET_PLATFORM == CC_PLATFORM_IOS) || (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID))
+    virtual bool onTouchBegan(cocos2d::Touch*, cocos2d::Event*);
+    virtual void onTouchEnded(cocos2d::Touch*, cocos2d::Event*);
+#endif
+    
  private:
     bool paused = false;
     CameraControl camera;
@@ -31,4 +38,7 @@ class Game : public cocos2d::Layer
     bool status = false;
     Size winSize;
     Label* label;
+    
+    //Flag for touch-control sliding
+    bool slideTouchHeld = false;
 };

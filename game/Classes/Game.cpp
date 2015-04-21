@@ -62,6 +62,14 @@ bool Game::init()
   auto contactListener = EventListenerPhysicsContact::create();
   contactListener->onContactBegin = CC_CALLBACK_1(Game::onContactBegin, this);
   _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+  
+  //Add and setup touch event listener
+  #if ((CC_TARGET_PLATFORM == CC_PLATFORM_IOS) || (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID))
+  auto touchListener = EventListenerTouchOneByOne::create();
+  touchListener->onTouchBegan = CC_CALLBACK_2(Game::onTouchBegan, this);
+  touchListener->onTouchEnded = CC_CALLBACK_2(Game::onTouchEnded, this);
+  _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+#endif
 
   Obstacles obs;
   SpeedPickup pickup;
@@ -146,7 +154,7 @@ bool Game::init()
   this->_eventDispatcher->addEventListenerWithSceneGraphPriority(receiver.create(),this);
   
   //Start BGM
-  CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("bg1.mp3", true);
+  CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("bg1.mp3", true);
   
   this->scheduleUpdate();
   return true;
@@ -161,6 +169,33 @@ void Game::reloadPickups(){
   node=pickup.createSpeedPickup(400.0, 120);
   this->addChild(node);
 }
+
+#if ((CC_TARGET_PLATFORM == CC_PLATFORM_IOS) || (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID))
+bool Game::onTouchBegan(Touch* touch,Event* event){
+  if(touch->getLocation().x <= winSize.width/2){
+    if(!player.isJumping()){
+      CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("jump.wav");
+      player.jump(1);
+    }
+    else if(player.isJumping() == 1){
+      CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("jump.wav");
+      player.jump(2);
+    }
+  }
+  else{
+    slideTouchHeld = true;
+  }
+  
+  return true;
+}
+
+void Game::onTouchEnded(Touch* touch, Event* event){
+  printf("touch cancelled\n");
+  if(touch->getLocation().x > winSize.width/2){
+    slideTouchHeld = false;
+  }
+}
+#endif
 
 void Game::update(float dt){ 
   if(paused){
@@ -196,15 +231,15 @@ void Game::update(float dt){
   if(receiver.IsKeyPressed(JUMP_KEY)){
     receiver.releaseKey(JUMP_KEY);
     if(!player.isJumping()){
-      CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("jump.wav");
+      CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("jump.wav");
       player.jump(1);
     }
     else if(player.isJumping() == 1){
-      CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("jump.wav");
+      CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("jump.wav");
       player.jump(2);
     }
   }
-  else if(receiver.IsKeyPressed(SLIDE_KEY)){
+  else if(receiver.IsKeyPressed(SLIDE_KEY) || slideTouchHeld){
     player.slide();
     status = true;
   }
