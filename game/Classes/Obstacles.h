@@ -1,3 +1,4 @@
+#pragma once
 #include "cocos2d.h"
 
 #define WALL_TAG 1
