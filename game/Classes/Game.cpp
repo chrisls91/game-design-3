@@ -22,14 +22,14 @@ bool Game::onContactBegin(PhysicsContact& contact)
 	  //cout << "WALL" << endl;
         }
         else if (nodeA->getTag() == PICKUP_TAG and nodeB->getTag() == PLAYER_TAG){
-          player.updateVelocity(player.getCurrentVelocity()*2.5);
+          player.increaseXVelocity(2.5);
           nodeA->getPhysicsBody()->removeFromWorld();
           auto parentNode = nodeA->getParent();
           nodeA->removeFromParentAndCleanup(true);
           parentNode->removeFromParentAndCleanup(true);
         }
         else if (nodeB->getTag() == PICKUP_TAG and nodeA->getTag() == PLAYER_TAG){
-          player.updateVelocity(player.getCurrentVelocity()*2.5);
+          player.increaseXVelocity(2.5);
           nodeB->getPhysicsBody()->removeFromWorld();
           auto parentNode = nodeB->getParent();
           nodeB->removeFromParentAndCleanup(true);
@@ -193,7 +193,6 @@ bool Game::onTouchBegan(Touch* touch,Event* event){
 }
 
 void Game::onTouchEnded(Touch* touch, Event* event){
-  printf("touch cancelled\n");
   if(touch->getLocation().x > winSize.width/2){
     slideTouchHeld = false;
   }

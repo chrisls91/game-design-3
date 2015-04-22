@@ -13,6 +13,7 @@ class Player
   cocos2d::Point getPosition();
   void setPosition(float x, float y);  
   void updateVelocity(float velocity);
+  void increaseXVelocity(float velocity);
   void jump(int n);
   int isJumping();
   void setJumping(int x);

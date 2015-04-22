@@ -66,6 +66,12 @@ void Player::resetPlayer(float x, float y){
   Sprite->getPhysicsBody()->setVelocity(Vec2(100,0));
 }
 
+//Increases X velocity by a given multiple
+void Player::increaseXVelocity(float multiple){
+    Vec2 currentV = Sprite->getPhysicsBody()->getVelocity();
+    Sprite->getPhysicsBody()->setVelocity(Vec2((currentV.x*multiple),currentV.y));
+}
+
 void Player::updateVelocity(float velocity){
   Vec2 vel = Sprite->getPhysicsBody()->getVelocity();
   Sprite->getPhysicsBody()->setVelocity(Vec2(((vel.x+velocity>MAXVELOCITY)?MAXVELOCITY:(vel.x+velocity)),vel.y));
