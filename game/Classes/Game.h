@@ -38,6 +38,7 @@ class Game : public cocos2d::Layer
     bool status = false;
     Size winSize;
     Label* label;
+    CocosDenshion::SimpleAudioEngine* audio;
     
     //Flag for touch-control sliding
     bool slideTouchHeld = false;

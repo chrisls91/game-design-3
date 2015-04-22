@@ -24,6 +24,11 @@ bool MainMenu::init(){
     {
         return false;
     }
+    
+    //Start background music
+    audio = CocosDenshion::SimpleAudioEngine::getInstance();
+    audio->playBackgroundMusic("DeliveryManTitleMusic.mp3", true);
+    audio->setBackgroundMusicVolume(1.0f);
 
     //Get size and origin for layout and placement
     winSize = Director::getInstance()->getWinSize();
@@ -63,6 +68,7 @@ bool MainMenu::init(){
 }
 
 void MainMenu::menuPlayCallback(){
+    audio->stopBackgroundMusic();
     auto scene = Game::createScene();
     Director::getInstance()->replaceScene(scene);
 }

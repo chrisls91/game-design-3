@@ -28,6 +28,7 @@ public:
     void reloadPickups();
 private:
     Size winSize;
+    CocosDenshion::SimpleAudioEngine* audio;
 };
 
 #endif /* defined(__MyGame__Menu__) */

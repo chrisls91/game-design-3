@@ -154,7 +154,10 @@ bool Game::init()
   this->_eventDispatcher->addEventListenerWithSceneGraphPriority(receiver.create(),this);
   
   //Start BGM
-  CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic("bg1.mp3", true);
+  audio = CocosDenshion::SimpleAudioEngine::getInstance();
+  audio->playBackgroundMusic("bg1.mp3", true);
+  audio->setBackgroundMusicVolume(10.0f);
+  audio->setEffectsVolume(0.5f);
   
   this->scheduleUpdate();
   return true;
@@ -174,11 +177,11 @@ void Game::reloadPickups(){
 bool Game::onTouchBegan(Touch* touch,Event* event){
   if(touch->getLocation().x <= winSize.width/2){
     if(!player.isJumping()){
-      CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("jump.wav");
+      audio->playEffect("jump.wav");
       player.jump(1);
     }
     else if(player.isJumping() == 1){
-      CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("jump.wav");
+      audio->playEffect("jump.wav");
       player.jump(2);
     }
   }
@@ -231,11 +234,11 @@ void Game::update(float dt){
   if(receiver.IsKeyPressed(JUMP_KEY)){
     receiver.releaseKey(JUMP_KEY);
     if(!player.isJumping()){
-      CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("jump.wav");
+      audio->playEffect("jump.wav");
       player.jump(1);
     }
     else if(player.isJumping() == 1){
-      CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("jump.wav");
+      audio->playEffect("jump.wav");
       player.jump(2);
     }
   }
