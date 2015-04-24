@@ -12,6 +12,7 @@
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
 #include "Game.h"
+#include "LeaderBoard.h"
 
 USING_NS_CC;
 
