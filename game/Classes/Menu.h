@@ -31,4 +31,20 @@ private:
     CocosDenshion::SimpleAudioEngine* audio;
 };
 
+class CompleteMenu : public cocos2d::Layer{
+public:
+    static cocos2d::Scene* createScene(float score);
+    virtual bool init() override;
+    CREATE_FUNC(CompleteMenu);
+    void setScore(float value);
+    void menuNextCallback();
+    void menuPostToBoardCallback();
+    void menuReplayCallback();
+    void menuMainMenuCallback();
+private:
+    Size winSize;
+    float score = 0;
+    CocosDenshion::SimpleAudioEngine* audio;
+};
+
 #endif /* defined(__MyGame__Menu__) */

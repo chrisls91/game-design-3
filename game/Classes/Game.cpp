@@ -22,19 +22,20 @@ bool Game::onContactBegin(PhysicsContact& contact)
 	  //cout << "WALL" << endl;
         }
         else if (nodeA->getTag() == PICKUP_TAG and nodeB->getTag() == PLAYER_TAG){
-          player.increaseXVelocity(2.5);
+          player.increaseXVelocity(2);
           nodeA->getPhysicsBody()->removeFromWorld();
           auto parentNode = nodeA->getParent();
           nodeA->removeFromParentAndCleanup(true);
           parentNode->removeFromParentAndCleanup(true);
         }
         else if (nodeB->getTag() == PICKUP_TAG and nodeA->getTag() == PLAYER_TAG){
-          player.increaseXVelocity(2.5);
+          player.increaseXVelocity(2);
           nodeB->getPhysicsBody()->removeFromWorld();
           auto parentNode = nodeB->getParent();
           nodeB->removeFromParentAndCleanup(true);
           parentNode->removeFromParentAndCleanup(true);
         }
+  
 	else if(nodeB->getTag() == GROUND_TAG || nodeA->getTag() == GROUND_TAG || nodeB->getTag() == GROUND2_TAG || nodeA->getTag() == GROUND2_TAG)
 	  player.setJumping(0);
     }
@@ -73,6 +74,7 @@ bool Game::init()
 
   Obstacles obs;
   SpeedPickup pickup;
+  
   // lvl1
   //create(float xi, float level, float size, int type)
   // Creating GROUND 1
@@ -105,11 +107,11 @@ bool Game::init()
   // Creating WALL 1
   this->addChild(obs.create(2800.0, 0.5, 400.0,WALL_TAG));
   // Creating GROUND2 2
-  this->addChild(obs.create(7950.0, 0, 3000.0,GROUND2_TAG));
+  this->addChild(obs.create(7950.0, 0, 3200.0,GROUND2_TAG));
   // Creating pickup1
-  this->addChild(pickup.createSpeedPickup(8200,3080));
-  this->addChild(pickup.createSpeedPickup(8600, 3080));
-  this->addChild(pickup.createSpeedPickup(8900, 3080));
+  this->addChild(pickup.createSpeedPickup(8200,300));
+  this->addChild(pickup.createSpeedPickup(8600, 300));
+  this->addChild(pickup.createSpeedPickup(8900, 300));
   
 
   // lvl 3
@@ -156,9 +158,10 @@ bool Game::init()
   //Start BGM
   audio = CocosDenshion::SimpleAudioEngine::getInstance();
   audio->playBackgroundMusic("bg1.mp3", true);
+  audio->preloadEffect("jump.wav");
   audio->setBackgroundMusicVolume(10.0f);
   audio->setEffectsVolume(0.5f);
-  
+
   this->scheduleUpdate();
   return true;
 }
@@ -257,8 +260,8 @@ void Game::update(float dt){
     auto tmpScene = this->createScene();
     Director::getInstance()->replaceScene(tmpScene);
   }
-  if(p.x > 10930){
-    paused = true;
-    player.stopPlayer();
+  if(p.x > 10230){
+    auto scene = CompleteMenu::createScene(time);
+    Director::getInstance()->replaceScene(scene);
   }
 }

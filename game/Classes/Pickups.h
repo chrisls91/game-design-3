@@ -11,10 +11,19 @@
 
 #include "cocos2d.h"
 
-class SpeedPickup
-{
+class SpeedPickup{
 public:
     cocos2d::SpriteBatchNode* createSpeedPickup(float x_pos, float y_pos);
+    cocos2d::Sprite* getSprite();
+    cocos2d::Point getPosition();
+    void setPosition(float x, float y);
+private:
+    cocos2d::Sprite* Sprite;
+};
+
+class FinishPickup{
+public:
+    cocos2d::SpriteBatchNode* create(float x_pos, float y_pos);
     cocos2d::Sprite* getSprite();
     cocos2d::Point getPosition();
     void setPosition(float x, float y);

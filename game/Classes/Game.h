@@ -6,6 +6,7 @@
 #include "Pickups.h"
 #include "KeyboardReceiver.h"
 #include "SimpleAudioEngine.h"
+#include "Menu.h"
 
 // Velocity per seconds
 #define BASE_VEL 100
