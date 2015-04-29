@@ -180,6 +180,12 @@ bool CompleteMenu::init(){
     
     this->addChild(menu,1);
     
+    //Create fireworks effect
+    emitter = ParticleExplosion::create();
+    emitter->retain();
+    emitter->setPosition(winSize.width/2,winSize.height/2);
+    this->addChild(emitter,-1);
+    
     return true;
 }
 

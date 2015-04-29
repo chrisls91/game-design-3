@@ -46,6 +46,7 @@ private:
     Size winSize;
     float score = 0;
     CocosDenshion::SimpleAudioEngine* audio;
+    ParticleSystemQuad* emitter;
 };
 
 #endif /* defined(__MyGame__Menu__) */

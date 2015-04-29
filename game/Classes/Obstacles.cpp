@@ -11,9 +11,9 @@ USING_NS_CC;
  *   type = Definifion types on Obstacles.h
 */
 
-DrawNode* Obstacles::create(float xi, float level, float size, int type)
+Sprite* Obstacles::create(float xi, float level, float size, int type)
 {
-  DrawNode* obstacle = DrawNode::create();
+  DrawNode* tmp_obstacle = DrawNode::create();
   float x, yi , y;
   if(type == WALL_TAG){
     x = xi + WALL_SIZE;
@@ -43,8 +43,51 @@ DrawNode* Obstacles::create(float xi, float level, float size, int type)
     Vec2(xi,yi), 
     Vec2(xi,y)
   };   
-  obstacle->drawPolygon(vertices2, 4, Color4F(1.0f,0.3f,0.3f,1), 3, Color4F(0.2f,0.2f,0.2f,1));
-  auto physicsBody = PhysicsBody::createPolygon(vertices2, 4);
+  tmp_obstacle->drawPolygon(vertices2, 4, Color4F(1.0f,0.3f,0.3f,0.7f), 3, Color4F(0.2f,0.2f,0.2f,0.7f));
+
+  //The way textures are being applied is a temporary hack to avoid changing
+  //the existing code that generates vertices
+  float textureWidth, textureHeight;
+  if(type == WALL_TAG){
+    textureWidth = WALL_SIZE;
+    textureHeight = size;
+  }
+  else if(type == GROUND_TAG){
+    textureWidth = size;
+    textureHeight = GROUND_SIZE;
+  }
+  else{
+    textureWidth = size;
+    textureHeight = WALL_SIZE;
+  }
+  
+  auto rt = RenderTexture::create(textureWidth,textureHeight);
+  rt->beginWithClear(255,255,255,255);
+  auto fill = Sprite::create("redbricktext.png");
+  fill->setBlendFunc((BlendFunc){GL_ALPHA,GL_ZERO});
+  fill->setPosition(0,textureHeight/2);
+  fill->visit();
+  //TODO: This is a crappy way of making sure all of the obstacles are filled
+  //probably should implement a for loop and use smaller fill png files
+  if(textureWidth>2806){
+    auto fill2 = Sprite::create("redbricktext.png");
+    fill2->setBlendFunc((BlendFunc){GL_ALPHA,GL_ZERO});
+    fill2->setPosition(2806,textureHeight/2);
+    fill2->visit();
+  }
+  if(textureWidth>(2806*2)){
+    auto fill3 = Sprite::create("redbricktext.png");
+    fill3->setBlendFunc((BlendFunc){GL_ALPHA,GL_ZERO});
+    fill3->setPosition((2806*2),textureHeight/2);
+    fill3->visit();
+  }
+  rt->end();
+  auto obstacle = Sprite::createWithTexture(rt->getSprite()->getTexture());
+  
+  //Use tmp_obstacle to set position of textured obstacle
+  obstacle->setPosition(xi+(textureWidth/2),yi+(textureHeight/2));
+  auto physicsBody = PhysicsBody::createBox(Size(textureWidth,textureHeight), PhysicsMaterial(1.0f,0.0f,0.f));
+//  auto physicsBody = PhysicsBody::createPolygon(vertices2, 4);
   physicsBody->setDynamic(false);
   physicsBody->setContactTestBitmask(0x01);
   obstacle->setTag(type);
