@@ -76,7 +76,8 @@ void MainMenu::menuPlayCallback(){
 }
 
 void MainMenu::menuLeaderboardCallback(){
-    printf("leaderboard presed\n");
+  auto scene = LeaderBoard::createScene();
+  Director::getInstance()->replaceScene(scene);
 }
 
 void MainMenu::menuSettingsCallback(){
