@@ -39,3 +39,31 @@ Point SpeedPickup::getPosition(){
 void SpeedPickup::setPosition(float x, float y){
     Sprite->setPosition(x,y);
 }
+
+SpriteBatchNode* FinishPickup::create(float x_pos, float y_pos){
+    // Create pickup sprite
+    SpriteBatchNode* spritebatch = SpriteBatchNode::create("finish_placeholder.png");
+    Sprite = Sprite::create("finish_placeholder.png");
+    spritebatch->addChild(Sprite);
+    Sprite->setTag(9);
+    //Sprite->getContentSize()
+    auto physicsBody = PhysicsBody::createBox(Size(60,318), PhysicsMaterial(1.0f,0.0f,0.f));
+    physicsBody->setContactTestBitmask(0x01);
+    physicsBody->setRotationEnable(false);
+    physicsBody->setGravityEnable(false);
+    Sprite->setPhysicsBody(physicsBody);
+    Sprite->setPosition(x_pos,y_pos);
+    return spritebatch;
+}
+
+Sprite* FinishPickup::getSprite(){
+    return Sprite;
+}
+
+Point FinishPickup::getPosition(){
+    return Sprite->getPosition();
+}
+
+void FinishPickup::setPosition(float x, float y){
+    Sprite->setPosition(x,y);
+}

@@ -6,6 +6,7 @@
 #include "Pickups.h"
 #include "KeyboardReceiver.h"
 #include "SimpleAudioEngine.h"
+#include "Menu.h"
 
 // Velocity per seconds
 #define BASE_VEL 100
@@ -38,6 +39,7 @@ class Game : public cocos2d::Layer
     bool status = false;
     Size winSize;
     Label* label;
+    CocosDenshion::SimpleAudioEngine* audio;
     
     //Flag for touch-control sliding
     bool slideTouchHeld = false;
