@@ -22,14 +22,14 @@ bool Game::onContactBegin(PhysicsContact& contact)
 	  //cout << "WALL" << endl;
         }
         else if (nodeA->getTag() == PICKUP_TAG and nodeB->getTag() == PLAYER_TAG){
-          player.increaseXVelocity(2);
+          player.increaseXVelocity(2.4);
           nodeA->getPhysicsBody()->removeFromWorld();
           auto parentNode = nodeA->getParent();
           nodeA->removeFromParentAndCleanup(true);
           parentNode->removeFromParentAndCleanup(true);
         }
         else if (nodeB->getTag() == PICKUP_TAG and nodeA->getTag() == PLAYER_TAG){
-          player.increaseXVelocity(2);
+          player.increaseXVelocity(2.4);
           nodeB->getPhysicsBody()->removeFromWorld();
           auto parentNode = nodeB->getParent();
           nodeB->removeFromParentAndCleanup(true);
