@@ -4,7 +4,7 @@
 USING_NS_CC;
 using namespace std;
 
-SpriteBatchNode* Player::createPlayer(float vel){
+SpriteBatchNode* Player::createPlayer(float vel, float x, float y){
    // Creating Caracter and Physics  
     SpriteBatchNode* spritebatch = SpriteBatchNode::create("stick.png");
 
@@ -33,7 +33,7 @@ SpriteBatchNode* Player::createPlayer(float vel){
 
     Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
     Sprite->runAction( RepeatForever::create( Animate::create(animation) ) );
-    Sprite->setPosition(100,163.9);
+    Sprite->setPosition(x,y);
     Sprite->setFlippedX(true);
     normalVelocity = vel;
     return spritebatch;
