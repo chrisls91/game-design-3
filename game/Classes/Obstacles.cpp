@@ -64,13 +64,13 @@ Sprite* Obstacles::create(float xi, float level, float size, int type)
   auto rt = RenderTexture::create(textureWidth,textureHeight);
   rt->beginWithClear(255,255,255,255);
   auto fill = Sprite::create("redbricktext.png");
-  fill->setBlendFunc((BlendFunc){GL_COLOR,GL_ZERO});
+  fill->setBlendFunc((BlendFunc){GL_DST_COLOR,GL_ZERO});
   fill->setPosition(0,textureHeight/2);
   fill->visit();
   //TODO: This is a crappy way of making sure all of the obstacles are filled
   //probably should implement a for loop and use smaller fill png files
   auto fill2 = Sprite::create("redbricktext.png");
-  fill2->setBlendFunc((BlendFunc){GL_COLOR,GL_ZERO});
+  fill2->setBlendFunc((BlendFunc){GL_DST_COLOR,GL_ZERO});
   fill2->setPosition(2806,textureHeight/2);
   fill2->visit();
 
