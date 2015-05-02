@@ -36,10 +36,22 @@ bool MainMenu::init(){
     winSize = Director::getInstance()->getWinSize();
     Point origin = Director::getInstance()->getVisibleOrigin();
     
+    //Create background effects
+    for(int i=0;i<winSize.width;i+=50){
+        auto emitter = ParticleFire::createWithTotalParticles(200);
+        emitter->setPosition(i,winSize.height/2-360);
+        emitter->setStartSize(80.0);
+        emitter->setEndSize(80.0);
+        emitter->setDuration(-1);
+        emitter->setLife(14);
+        emitter->setEmissionRate(5);
+        this->addChild(emitter);
+    }
+    
     //Create a TTFConfig and set settings appropriately
     TTFConfig labelConfig;
     labelConfig.fontFilePath = "fonts/chowfun.ttf";
-    labelConfig.fontSize = 42;
+    labelConfig.fontSize = 40;
     labelConfig.glyphs = GlyphCollection::DYNAMIC;
     labelConfig.outlineSize = 0;
     labelConfig.customGlyphs = nullptr;
@@ -51,18 +63,23 @@ bool MainMenu::init(){
     auto settingsLabel = Label::createWithTTF(labelConfig, "Settings");
     auto quitLabel = Label::createWithTTF(labelConfig, "Quit");
     
-    //Create MnuItems from labels
+    //Create MenuItems from labels
     auto playMenuItem = MenuItemLabel::create(playGameLabel, CC_CALLBACK_0(MainMenu::menuPlayCallback, this));
     auto boardMenuItem = MenuItemLabel::create(leaderboardLabel, CC_CALLBACK_0(MainMenu::menuLeaderboardCallback, this));
     auto settingsItem = MenuItemLabel::create(settingsLabel, CC_CALLBACK_0(MainMenu::menuSettingsCallback, this));
     auto quitItem = MenuItemLabel::create(quitLabel, CC_CALLBACK_0(MainMenu::menuQuitCallback, this));
     
+    //Create Title Logo
+    auto titleSprite = Sprite::create("DeliveryBoyTitleLogo.png");
+    titleSprite->setPosition(winSize.width/2,winSize.height/2+160);
+    this->addChild(titleSprite,1);
+    
     //Create menu and add all the items
     auto menu = Menu::create(playMenuItem,boardMenuItem,settingsItem,quitItem,NULL);
-    menu->setPosition(winSize.width/2,winSize.height/2);
+    menu->setPosition(winSize.width/2,winSize.height/2-140);
     
     menu->setColor(Color3B(255,25,25));
-    menu->alignItemsVerticallyWithPadding(20.0);
+    menu->alignItemsVerticallyWithPadding(10.0);
     
     this->addChild(menu,1);
     
