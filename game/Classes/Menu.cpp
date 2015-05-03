@@ -218,7 +218,9 @@ void CompleteMenu::menuReplayCallback(){
 }
 
 void CompleteMenu::menuPostToBoardCallback(){
-    
+  auto scene = PostToLeaderBoard::createScene();
+  PostToLeaderBoard::setScore(score);
+  Director::getInstance()->replaceScene(scene);
 }
 
 void CompleteMenu::menuMainMenuCallback(){
