@@ -79,7 +79,7 @@ bool Game::init()
 
   float startX, startY;
   ifstream source;
-  string levelStr = "Resources/data/data" + to_string(level);
+  string levelStr = "data/data" + to_string(level);
   source.open(levelStr, ios_base::in);
   cout << levelStr << endl;
 
