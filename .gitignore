@@ -1,6 +1,7 @@
 game/*
 !game/Classes/
 !game/Resources/
+!gameResources/data/
 game/Classes/Collision.cpp
 game/Classes/Collision.h
 game/Classes/HelloWorldScene.cpp
