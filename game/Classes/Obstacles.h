@@ -14,7 +14,7 @@
 class Obstacles
 {
  public:
-  cocos2d::Sprite* create(float xi, float level, float size, int type);
+  cocos2d::Sprite* create(float xi, float level, float size, int type, int textureType);
  private:
   float lastGround = 0;
   float lastSize = 0;

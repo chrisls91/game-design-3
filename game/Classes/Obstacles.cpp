@@ -11,7 +11,7 @@ USING_NS_CC;
  *   type = Definifion types on Obstacles.h
 */
 
-Sprite* Obstacles::create(float xi, float level, float size, int type)
+Sprite* Obstacles::create(float xi, float level, float size, int type, int textureType)
 {
   DrawNode* tmp_obstacle = DrawNode::create();
   float x, yi , y;

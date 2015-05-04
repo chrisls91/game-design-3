@@ -22,6 +22,7 @@ class Game : public cocos2d::Layer
     void update(float dt) override;
     bool onContactBegin(PhysicsContact& contact);
     void reloadPickups();
+    int level = 1;
     
     //Touchscreen callbacks
 #if ((CC_TARGET_PLATFORM == CC_PLATFORM_IOS) || (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID))
@@ -40,7 +41,6 @@ class Game : public cocos2d::Layer
     Size winSize;
     Label* label;
     CocosDenshion::SimpleAudioEngine* audio;
-    
     //Flag for touch-control sliding
     bool slideTouchHeld = false;
 };

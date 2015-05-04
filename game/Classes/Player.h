@@ -6,7 +6,7 @@
 class Player
 {
  public:
-  cocos2d::SpriteBatchNode* createPlayer(float vel);
+  cocos2d::SpriteBatchNode* createPlayer(float vel, float x, float y);
   cocos2d::Sprite* getSprite();
   float getNormalVelocity();
   float getCurrentVelocity();

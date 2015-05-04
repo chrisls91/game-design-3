@@ -1,0 +1,33 @@
+0 = Starting point
+1 = Ground1 
+2 = Ground2
+3 = Wall
+4 = PickUp
+
+// To do
+5 = Medals
+6 = Sounds
+7 = BackGround
+
+
+// Patterns
+
+0 => Set player starting position
+
+0 float float | option, starting x position, starting y position
+
+1 => Create ground type 1
+
+1 float float float int | x initial position, level(height), size, textureType
+
+2 => Create ground type 2
+
+2 float float float int | x initial position, level(height), size, textureType
+
+3 => Create Wall
+
+3 float float float int | x initial position, level(height), size, textureType
+
+4 => Add PickUp
+
+4 float float | x postion, y position

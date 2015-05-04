@@ -1,10 +1,12 @@
 #include "Game.h"
 #include <iomanip>
 #include <iostream>
+#include <sstream>
+#include <fstream>
+#include <string>
 
 USING_NS_CC;
 using namespace std;
-
 
 // Collision Detection
 bool Game::onContactBegin(PhysicsContact& contact)
@@ -70,74 +72,54 @@ bool Game::init()
   touchListener->onTouchBegan = CC_CALLBACK_2(Game::onTouchBegan, this);
   touchListener->onTouchEnded = CC_CALLBACK_2(Game::onTouchEnded, this);
   _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
-#endif
+  #endif
 
   Obstacles obs;
   SpeedPickup pickup;
-  
-  // lvl1
-  //create(float xi, float level, float size, int type)
-  // Creating GROUND 1
-  this->addChild(obs.create(0.0, 0, 1200.0,GROUND_TAG));
-  // Creating GROUND 2
-  this->addChild(obs.create(1500, 0, 4000.0,GROUND_TAG));
-  // Creating GROUND 3
-  this->addChild(obs.create(6000, 0, 2000.0,GROUND_TAG));
-  // Creating WALL 1
-  this->addChild(obs.create(700.0, 0.5, 900.0,WALL_TAG));
-  // Creating WALL 2
-  this->addChild(obs.create(2500.0, 0.5, 63.0,WALL_TAG));
-  // Creating WALL 4
-  this->addChild(obs.create(4300.0, 0, 100.0,WALL_TAG));
-  // Creating pickup 1
-  this->addChild(pickup.createSpeedPickup(4320.0, 250));
-  // Creating WALL 5
-  this->addChild(obs.create(4800.0, 0.5, 100.0,WALL_TAG));
-  // Creating WALL 6
-  this->addChild(obs.create(6800.0, 0, 75.0,WALL_TAG));
-  // Creating WALL 7
-  this->addChild(obs.create(7000.0, 1, 320.0,WALL_TAG));
-  // Creating WALL 5
-  this->addChild(obs.create(7200.0, 0, 100.0,WALL_TAG));
-  
 
-  // lvl 2
-  // Creating GROUND2 1
-  this->addChild(obs.create(2250.0, 1, 1200.0,GROUND2_TAG));
-  // Creating WALL 1
-  this->addChild(obs.create(2800.0, 0.5, 400.0,WALL_TAG));
-  // Creating GROUND2 2
-  this->addChild(obs.create(7950.0, 0, 3200.0,GROUND2_TAG));
-  // Creating pickup1
-  this->addChild(pickup.createSpeedPickup(8200,300));
-  this->addChild(pickup.createSpeedPickup(8600, 300));
-  this->addChild(pickup.createSpeedPickup(8900, 300));
+  float startX, startY;
+  ifstream source;
+  string levelStr = "data/data" + to_string(level);
+  source.open(levelStr, ios_base::in);
+  cout << levelStr << endl;
+
+  if(!source)
+    cerr << "Can't open Data!\n";
   
-
-  // lvl 3
-  // Creating GROUND2 1
-  this->addChild(obs.create(3400.0, 1, 1000.0,GROUND2_TAG));
-  // Creating WALL 1
-  this->addChild(obs.create(3800.0, 0.5, 500.0,WALL_TAG));
-  //Creating Pickup1
-  this->addChild(pickup.createSpeedPickup(3800.0, 450));
-
-  // lvl 4
-  // Creating GROUND2 1
-  this->addChild(obs.create(4400.0, 1, 1200.0,GROUND2_TAG));
-  // Creating GROUND2 1
-  this->addChild(obs.create(6000.0, 0, 1900.0,GROUND2_TAG));
-  // Creating WALL 1
-  this->addChild(obs.create(5200.0, 0, 75.0,WALL_TAG));
-  // Creating WALL 2
-  this->addChild(obs.create(5200.0, 1.5, 350.0,WALL_TAG));
-  // Creating pickup 1
-  this->addChild(pickup.createSpeedPickup(5800, 375.0));
-  // Creating pickup 2
-  this->addChild(pickup.createSpeedPickup(6000, 1000));
+  for(string line; getline(source, line); ){
+    istringstream in(line);
+    int option, x4;
+    float x1, x2, x3;
+    in >> option >> x1 >> x2 >> x3 >> x4;
+    switch(option){
+      // Setting start position
+    case 0:
+      startX = x1;
+      startY = x2;
+      break;
+      // Adding ground type 1
+    case 1:
+      this->addChild(obs.create(x1, x2, x3, GROUND_TAG, x4));
+      break;
+      // Adding ground type 2
+    case 2:
+      this->addChild(obs.create(x1, x2, x3, GROUND2_TAG, x4));
+      break;
+      // Adding Wall
+    case 3:
+      this->addChild(obs.create(x1, x2, x3, WALL_TAG, x4));
+      break;
+      // Adding PickUps
+    case 4:
+      this->addChild(pickup.createSpeedPickup(x1, x2));
+      break;
+    }
+  }
+ 
+  
   
   // Creating Player
-  this->addChild(player.createPlayer(350));
+  this->addChild(player.createPlayer(350, startX, startY));
   
   Point p = player.getPosition();
   
@@ -204,9 +186,7 @@ void Game::onTouchEnded(Touch* touch, Event* event){
 
 void Game::update(float dt){ 
   if(paused){
-    if(receiver.IsKeyPressed(SLIDE_KEY)){
-      player.resetPlayer(100,163.9);
-      time = 0.0;
+    if(receiver.IsKeyPressed(SLIDE_KEY)){      
       paused = false;
       auto tmpScene = this->createScene();
       Director::getInstance()->replaceScene(tmpScene);
@@ -254,9 +234,7 @@ void Game::update(float dt){
   }
   // Reseting player position if it died
   Vec2 bp = player.getSprite()->getPhysicsBody()->getPosition();
-  if(p.y < 0){
-    player.resetPlayer(100,163.9);
-    time = 0.0;
+  if(p.y < 0){        
     auto tmpScene = this->createScene();
     Director::getInstance()->replaceScene(tmpScene);
   }
