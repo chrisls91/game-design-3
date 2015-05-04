@@ -72,6 +72,10 @@ void Player::increaseXVelocity(float multiple){
     Sprite->getPhysicsBody()->setVelocity(Vec2((currentV.x*multiple),currentV.y));
 }
 
+void Player::setVelocity(float vel){
+  Sprite->getPhysicsBody()->setVelocity(Vec2(vel,0));
+}
+
 void Player::updateVelocity(float velocity){
   Vec2 vel = Sprite->getPhysicsBody()->getVelocity();
   Sprite->getPhysicsBody()->setVelocity(Vec2(((vel.x+velocity>MAXVELOCITY)?MAXVELOCITY:(vel.x+velocity)),vel.y));
@@ -103,7 +107,8 @@ void Player::jump(int n){
 
   Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
   //Sprite->runAction( Animate::create(animation) );
-  Sprite->getPhysicsBody()->setVelocity(Vec2(getCurrentVelocity(), 150 * 2.5));
+  auto vel = getCurrentVelocity()-BASE_VEL/3;
+  Sprite->getPhysicsBody()->setVelocity(Vec2(((vel>0)? vel:0), 150 * 2.5));
   jumping = n;
 }
 

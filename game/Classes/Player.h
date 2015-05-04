@@ -1,7 +1,9 @@
 #pragma once
 #include "cocos2d.h"
 
-#define MAXVELOCITY 800
+#define MAXVELOCITY 1500
+#define BASE_VEL 200
+#define SLIDE_TIME 800
 
 class Player
 {
@@ -14,6 +16,7 @@ class Player
   void setPosition(float x, float y);  
   void updateVelocity(float velocity);
   void increaseXVelocity(float velocity);
+  void setVelocity(float vel);
   void jump(int n);
   int isJumping();
   void setJumping(int x);
@@ -21,6 +24,7 @@ class Player
   void endSlide();
   void resetPlayer(float x, float y);
   void stopPlayer();
+
  private:
   cocos2d::SpriteFrameCache* cache;
   float normalVelocity;
