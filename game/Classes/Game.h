@@ -8,9 +8,6 @@
 #include "SimpleAudioEngine.h"
 #include "Menu.h"
 
-// Velocity per seconds
-#define BASE_VEL 100
-
 USING_NS_CC;
 
 class Game : public cocos2d::Layer
@@ -37,10 +34,10 @@ class Game : public cocos2d::Layer
     float time = 0.0;
     Player player;
     Node* wall;
-    bool status = false;
     Size winSize;
     Label* label;
     CocosDenshion::SimpleAudioEngine* audio;
     //Flag for touch-control sliding
     bool slideTouchHeld = false;
+    float slideTimer = 0;
 };

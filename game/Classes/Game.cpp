@@ -81,7 +81,6 @@ bool Game::init()
   ifstream source;
   string levelStr = "data/data" + to_string(level);
   source.open(levelStr, ios_base::in);
-  cout << levelStr << endl;
 
   if(!source)
     cerr << "Can't open Data!\n";
@@ -116,8 +115,6 @@ bool Game::init()
     }
   }
  
-  
-  
   // Creating Player
   this->addChild(player.createPlayer(350, startX, startY));
   
@@ -199,7 +196,7 @@ void Game::update(float dt){
 
   // Updating player velocity
   if(player.getCurrentVelocity()>player.getNormalVelocity()){
-    player.updateVelocity(dt*(-BASE_VEL));
+    player.updateVelocity(dt*(-BASE_VEL/3));
   }
   else{
     player.updateVelocity(dt*BASE_VEL);
@@ -211,11 +208,18 @@ void Game::update(float dt){
   int sec = (int) (time/1000)%60;
   int min = (time/1000)/60;
   label->setString(((min>0)?to_string(min) + ":":"") + to_string(sec) + ":" + to_string(ms));
-  
+   
+  // Slide Timing
+  if((receiver.IsKeyPressed(SLIDE_KEY) || slideTouchHeld) && !slideTimer)
+    slideTimer = 1;
+
+  if(slideTimer < 0)
+    slideTimer = (slideTimer + dt*1000 > 0)? 0:slideTimer + dt*1000;
+
   //Player jumping
-  if(receiver.IsKeyPressed(JUMP_KEY)){
+  if(receiver.IsKeyPressed(JUMP_KEY) && !slideTimer){
     receiver.releaseKey(JUMP_KEY);
-    if(!player.isJumping()){
+  if(!player.isJumping()){
       audio->playEffect("jump.wav");
       player.jump(1);
     }
@@ -224,14 +228,15 @@ void Game::update(float dt){
       player.jump(2);
     }
   }
-  else if(receiver.IsKeyPressed(SLIDE_KEY) || slideTouchHeld){
-    player.slide();
-    status = true;
-  }
-  else if(status){
+  else if(slideTimer > SLIDE_TIME){
+    slideTimer = -SLIDE_TIME/2;
     player.endSlide();
-    status = false;
   }
+  else if(slideTimer > 0){
+    player.slide();
+    slideTimer += dt*1000;
+  }
+ 
   // Reseting player position if it died
   Vec2 bp = player.getSprite()->getPhysicsBody()->getPosition();
   if(p.y < 0){        
