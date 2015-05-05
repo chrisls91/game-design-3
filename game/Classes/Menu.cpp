@@ -110,12 +110,12 @@ void MainMenu::menuQuitCallback(){
 
 
 //Level complete menu implementation
-Scene* CompleteMenu::createScene(float score){
+Scene* CompleteMenu::createScene(float score, int level){
     auto scene = Scene::create();
     auto layer = CompleteMenu::create();
     layer->setScore(score);
+    layer->setLevel(level);
     scene->addChild(layer);
-    
     return scene;
 }
 
@@ -138,6 +138,11 @@ void CompleteMenu::setScore(float value){
     scoreLabel->setString(((min>0)?to_string(min) + ":":"") + to_string(sec) + ":" + to_string(ms));
     scoreLabel->setPosition(winSize.width/2,winSize.height/2+100);
     this->addChild(scoreLabel,1);
+}
+
+void CompleteMenu::setLevel(int level)
+{
+    this->level = level;
 }
 
 bool CompleteMenu::init(){
@@ -218,8 +223,7 @@ void CompleteMenu::menuReplayCallback(){
 }
 
 void CompleteMenu::menuPostToBoardCallback(){
-  auto scene = PostToLeaderBoard::createScene();
-  PostToLeaderBoard::setScore(score);
+  auto scene = PostToLeaderBoard::createScene(score, level);
   Director::getInstance()->replaceScene(scene);
 }
 

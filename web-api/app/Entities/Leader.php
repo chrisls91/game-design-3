@@ -7,10 +7,15 @@ class Leader extends BaseModel {
     {
         $leader = $this->model->create();
         $leader->name = $data['name'];
-        $leader->score = $data['score'];
+        $leader->time = $data['time'];
+        $leader->level = $data['level'];
         $leader->save();
 
         return $leader;
     }
 
+    public function findByTime()
+    {
+        return \ORM::for_table('leaders')->order_by_asc('time')->find_array();
+    }
 }

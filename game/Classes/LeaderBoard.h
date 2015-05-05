@@ -11,9 +11,13 @@
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
+#include "network/HttpClient.h"
 #include <string>
 #include "Game.h"
 #include "Menu.h"
+#include "external/json/document.h"
+#include "external/json/writer.h"
+#include "external/json/stringbuffer.h"
 
 USING_NS_CC;
 
@@ -24,22 +28,27 @@ public:
     virtual bool init() override;
     CREATE_FUNC(LeaderBoard);
     void lbBackCallback();
+    void onHttpRequestCompleted();
 private:
     Size winSize;
+    cocos2d::network::HttpResponse *response;
 };
 
 
 class PostToLeaderBoard : public cocos2d::Layer
 {
 public:
-    static cocos2d::Scene* createScene();
+    static cocos2d::Scene* createScene(float value, int level);
     virtual bool init() override;
     CREATE_FUNC(PostToLeaderBoard);
     void lbSubmitCallback();
-    static void setScore(float score);
+    void setScore();
 private:
     Size winSize;
-  static float score;
+    float score;
+    int level;
+    std::string name;
+    cocos2d::ui::EditBox* editbox;
 };
 
 #endif /* defined(__gamename2__LeaderBoard__) */

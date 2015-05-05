@@ -7,8 +7,24 @@
 //
 
 #include "LeaderBoard.h"
+#include <iostream>
+#include <stdio.h>
 USING_NS_CC;
 using namespace std;
+
+std::string exec(char* cmd) {
+  FILE* pipe = popen(cmd, "r");
+  if (!pipe) return "ERROR";
+  char buffer[128];
+  std::string result = "";
+  while(!feof(pipe)) {
+    if(fgets(buffer, 128, pipe) != NULL)
+    		result += buffer;
+  }
+  pclose(pipe);
+  return result;
+}
+
 
 Scene* LeaderBoard::createScene(){
   auto scene = Scene::create();
@@ -42,14 +58,41 @@ bool LeaderBoard::init(){
   label1->setAnchorPoint(Point(0.0f, 0.0f));
   this->addChild(label1);
   
-  for (int i = 0; i < 10; i++)
+  /*
+  auto request = new cocos2d::network::HttpRequest();
+  request->setUrl("http://localhost:8000/index.php/leaders");
+  request->setRequestType(cocos2d::network::HttpRequest::Type::GET);
+  response = new cocos2d::network::HttpResponse(request);
+  request->setResponseCallback(CC_CALLBACK_0(LeaderBoard::onHttpRequestCompleted, this));
+  request->setTag("GET leaders");
+  cocos2d::network::HttpClient::getInstance()->send(request);
+  request->release();
+  */
+  
+  string results = exec("curl -i -H \"Accept: application/json\" \"localhost:8000/index.php/leaders\" ");
+  std::size_t found = results.find("[");
+  
+  results = results.substr(found, results.size() - 2);
+  
+  //cout << results << endl;
+  rapidjson::Document jsonDoc; // create the object
+  jsonDoc.Parse<0>(results.c_str());
+  
+  cout << jsonDoc.Size() << endl;
+  
+  int loopsize = 10;
+  if (jsonDoc.Size() < 10) {
+    loopsize = jsonDoc.Size();
+  }
+  
+  for (int i = 0; i < loopsize; i++)
   {
-    
-    auto temp = Label::createWithTTF(std::to_string(i + 1) + ".    Leaderboard", "fonts/chowfun.ttf", 24);
+    auto temp = Label::createWithTTF(std::to_string(i + 1) + ". " + jsonDoc[i]["name"].GetString() + " -- " + jsonDoc[i]["time"].GetString() + " -- Level: " + jsonDoc[i]["level"].GetString(), "fonts/chowfun.ttf", 24);
     temp->setPosition(Point(winSize.width/2 - 250, winSize.height - 120 - (40 * (i + .5))));
     temp->setAnchorPoint(Point(0.0f, 0.0f));
     this->addChild(temp);
   }
+  
   //Create labels with TTFConfig
   auto backLabel = Label::createWithTTF(labelConfig, "Back");
   
@@ -65,6 +108,21 @@ bool LeaderBoard::init(){
   
   this->addChild(menu,1);
   return true;
+}
+
+void LeaderBoard::onHttpRequestCompleted()
+{
+  
+  std::vector<char>* buffer = response->getResponseData();
+  printf("Http Test, dump data: ");
+  cout << response->getResponseHeader() << endl;
+  cout << response->getResponseCode() << endl;
+  for (unsigned int i = 0; i < buffer->size(); i++)
+  {
+    printf("%c", (*buffer)[i]);
+  }
+  printf("\n");
+
 }
 
 void LeaderBoard::lbBackCallback(){
@@ -83,19 +141,35 @@ void LeaderBoard::lbBackCallback(){
  *
  */
 
-Scene* PostToLeaderBoard::createScene(){
+Scene* PostToLeaderBoard::createScene(float value, int level){
   auto scene = Scene::create();
   auto layer = PostToLeaderBoard::create();
+  layer->score = value / 1000;
+  layer->level = level;
+  layer->setScore();
   scene->addChild(layer);
   
   return scene;
 }
 
-float PostToLeaderBoard::score = 0.0;
-
-void PostToLeaderBoard::setScore(float score)
+void PostToLeaderBoard::setScore()
 {
-  PostToLeaderBoard::score = score;
+  //Create TTFConfig for main label
+  TTFConfig mainLabelConfig;
+  mainLabelConfig.fontFilePath = "fonts/chowfun.ttf";
+  mainLabelConfig.fontSize = 62;
+  mainLabelConfig.glyphs = GlyphCollection::DYNAMIC;
+  mainLabelConfig.outlineSize = 0;
+  mainLabelConfig.customGlyphs = nullptr;
+  mainLabelConfig.distanceFieldEnabled = false;
+  
+  auto scoreLabel = Label::createWithTTF(mainLabelConfig, "");;
+  int ms = (int) score%1000;
+  int sec = (int) (score/1000)%60;
+  int min = (score/1000)/60;
+  scoreLabel->setString(((min>0)?to_string(min) + ":":"") + to_string(sec) + ":" + to_string(ms));
+  scoreLabel->setPosition(winSize.width/2,winSize.height - 200);
+  this->addChild(scoreLabel,1);
 }
 
 bool PostToLeaderBoard::init(){
@@ -123,12 +197,7 @@ bool PostToLeaderBoard::init(){
   label1->setAnchorPoint(Point(0.0f, 0.0f));
   this->addChild(label1);
   
-  auto label2 = Label::createWithTTF(to_string(PostToLeaderBoard::score), "fonts/chowfun.ttf", 44);
-  label2->setPosition(Point(winSize.width/2, winSize.height - 200 ));
-  label2->setAnchorPoint(Point(0.0f, 0.0f));
-  this->addChild(label2);
-  
-  auto nameBox  = cocos2d::ui::EditBox::create(Size(400, 20), "WhiteBox.jpg");
+  cocos2d::ui::EditBox* nameBox  = cocos2d::ui::EditBox::create(Size(400, 20), "WhiteBox.jpg");
   nameBox->setPosition(Vec2(winSize.width/2, winSize.height - 300));
   nameBox->setFontColor(Color3B::BLACK);
   nameBox->setPlaceHolder("Name:");
@@ -136,6 +205,8 @@ bool PostToLeaderBoard::init(){
   nameBox->setMaxLength(100);
   nameBox->setReturnType(ui::EditBox::KeyboardReturnType::DONE);
   addChild(nameBox);
+  
+  editbox = nameBox;
   
   //Create labels with TTFConfig
   auto submitLabel = Label::createWithTTF(labelConfig, "Submit");
@@ -155,7 +226,21 @@ bool PostToLeaderBoard::init(){
 }
 
 void PostToLeaderBoard::lbSubmitCallback(){
-  auto scene = LeaderBoard::createScene();
+  auto scene = MainMenu::createScene();
+  
+  auto request = new cocos2d::network::HttpRequest();
+  request->setUrl("http://localhost:8000/index.php/leaders");
+  request->setRequestType(cocos2d::network::HttpRequest::Type::POST);
+  std::vector<std::string> headers;
+  headers.push_back("Content-Type: application/json; charset=utf-8");
+  request->setHeaders(headers);  // write the post data
+  char data[4096];
+  sprintf(data, "%s%s%s%f%s%d%s", "{\"name\": \"", editbox->getText(), "\",\"time\": \"", score, "\",\"level\": \"", level, "\"}");
+  request->setRequestData(data, strlen(data));
+  
+  request->setTag("POST leaders");
+  cocos2d::network::HttpClient::getInstance()->send(request);
+  request->release();
   Director::getInstance()->replaceScene(scene);
 }
 
