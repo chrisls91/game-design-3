@@ -79,9 +79,10 @@ bool Game::init()
 
   float startX, startY;
   ifstream source;
+  //string levelStr = "Resources/data/data" + to_string(level);
   string levelStr = "data/data" + to_string(level);
   source.open(levelStr, ios_base::in);
-
+  
   if(!source)
     cerr << "Can't open Data!\n";
   
@@ -111,6 +112,9 @@ bool Game::init()
       // Adding PickUps
     case 4:
       this->addChild(pickup.createSpeedPickup(x1, x2));
+      break;
+    case 5:
+      endX = x1;
       break;
     }
   }
@@ -243,7 +247,7 @@ void Game::update(float dt){
     auto tmpScene = this->createScene();
     Director::getInstance()->replaceScene(tmpScene);
   }
-  if(p.x > 10230){
+  if(p.x > endX){
     auto scene = CompleteMenu::createScene(time);
     Director::getInstance()->replaceScene(scene);
   }

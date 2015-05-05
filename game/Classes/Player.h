@@ -1,7 +1,7 @@
 #pragma once
 #include "cocos2d.h"
 
-#define MAXVELOCITY 1500
+#define MAXVELOCITY 1200
 #define BASE_VEL 200
 #define SLIDE_TIME 800
 

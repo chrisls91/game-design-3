@@ -3,10 +3,10 @@
 2 = Ground2
 3 = Wall
 4 = PickUp
+5 = Final place
 
 // To do
-5 = Medals
-6 = Sounds
+6 = Music
 7 = BackGround
 
 
