@@ -19,8 +19,8 @@ class Game : public cocos2d::Layer
     void update(float dt) override;
     bool onContactBegin(PhysicsContact& contact);
     void reloadPickups();
-    int level = 2;
-    
+    static int level;
+    static void setLevel(int lvl);
     //Touchscreen callbacks
 #if ((CC_TARGET_PLATFORM == CC_PLATFORM_IOS) || (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID))
     virtual bool onTouchBegan(cocos2d::Touch*, cocos2d::Event*);

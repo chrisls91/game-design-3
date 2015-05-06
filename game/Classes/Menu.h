@@ -49,4 +49,18 @@ private:
     ParticleSystemQuad* emitter;
 };
 
+class LevelSelect : public cocos2d::Layer{
+public:
+    static cocos2d::Scene* createScene();
+    virtual bool init() override;
+    CREATE_FUNC(LevelSelect);
+    void level1Callback();
+    void level2Callback();
+    void level3Callback();
+    void level4Callback();
+private:
+    Size winSize;
+    CocosDenshion::SimpleAudioEngine* audio;
+};
+
 #endif /* defined(__MyGame__Menu__) */

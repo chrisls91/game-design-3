@@ -8,6 +8,8 @@
 USING_NS_CC;
 using namespace std;
 
+int Game::level = 1;
+
 // Collision Detection
 bool Game::onContactBegin(PhysicsContact& contact)
 {
@@ -44,11 +46,15 @@ bool Game::onContactBegin(PhysicsContact& contact)
     return true;
 }
 
+void Game::setLevel(int lvl){
+    level = lvl;
+}
+
 Scene* Game::createScene()
 {
     auto scene = Scene::createWithPhysics();
     auto layer = Game::create();
-    scene->addChild(layer);   
+    scene->addChild(layer,1,1);
     // Increasing Gravity
     scene->getPhysicsWorld()->setGravity(Vec2(0,-500));
     return scene;

@@ -88,7 +88,7 @@ bool MainMenu::init(){
 
 void MainMenu::menuPlayCallback(){
     audio->stopBackgroundMusic();
-    auto scene = Game::createScene();
+    auto scene = LevelSelect::createScene();
     Director::getInstance()->replaceScene(scene);
 }
 
@@ -207,7 +207,8 @@ bool CompleteMenu::init(){
 }
 
 void CompleteMenu::menuNextCallback(){
-    
+    auto scene = LevelSelect::createScene();
+    Director::getInstance()->replaceScene(scene);
 }
 
 void CompleteMenu::menuReplayCallback(){
@@ -223,5 +224,62 @@ void CompleteMenu::menuPostToBoardCallback(){
 void CompleteMenu::menuMainMenuCallback(){
     audio->stopBackgroundMusic();
     auto scene = MainMenu::createScene();
+    Director::getInstance()->replaceScene(scene);
+}
+
+Scene* LevelSelect::createScene(){
+    auto scene = Scene::create();
+    auto layer = LevelSelect::create();
+    scene->addChild(layer);
+    
+    return scene;
+}
+
+bool LevelSelect::init(){
+    if ( !Layer::init() )
+    {
+        return false;
+    }
+    
+    //Get size and origin for layout and placement
+    winSize = Director::getInstance()->getWinSize();
+    Point origin = Director::getInstance()->getVisibleOrigin();
+    
+    //Create TTFConfig for main label
+    TTFConfig labelConfig;
+    labelConfig.fontFilePath = "fonts/Metropolian-Display.ttf";
+    labelConfig.fontSize = 22;
+    labelConfig.glyphs = GlyphCollection::DYNAMIC;
+    labelConfig.outlineSize = 0;
+    labelConfig.customGlyphs = nullptr;
+    labelConfig.distanceFieldEnabled = false;
+    
+    auto lvl1Label = Label::createWithTTF(labelConfig, "First delivery");
+    auto lvl2Label = Label::createWithTTF(labelConfig, "Bad part of town");
+    
+    auto lvl1Btn = MenuItemLabel::create(lvl1Label, CC_CALLBACK_0(LevelSelect::level1Callback, this));
+    auto lvl2Btn = MenuItemLabel::create(lvl2Label, CC_CALLBACK_0(LevelSelect::level2Callback, this));
+    
+    auto menu = Menu::create(lvl1Btn,lvl2Btn,NULL);
+    
+    menu->setPosition(winSize.width/2-120,winSize.height/2);
+    menu->setColor(Color3B(255,255,255));
+    menu->alignItemsVerticallyWithPadding(1.0);
+
+    
+    this->addChild(menu);
+
+    return true;
+}
+
+void LevelSelect::level1Callback(){
+    Game::setLevel(1);
+    auto scene = Game::createScene();
+    Director::getInstance()->replaceScene(scene);
+}
+
+void LevelSelect::level2Callback(){
+    Game::setLevel(2);
+    auto scene = Game::createScene();
     Director::getInstance()->replaceScene(scene);
 }
