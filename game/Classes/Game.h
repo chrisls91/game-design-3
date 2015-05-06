@@ -42,4 +42,6 @@ class Game : public cocos2d::Layer
     //Flag for touch-control sliding
     bool slideTouchHeld = false;
     float slideTimer = 0;
+    const char* bgLut[7] = {"citytrace.png","citytrace2.png","citytrace3.png","citytrace4.png","citytrace5.png","citytrace6.png","citytrace7.png"};
+    const char* muLut[3] = {"bg1.mp3","bg2.mp3","bg3.mp3"};
 };

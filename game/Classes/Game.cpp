@@ -127,28 +127,19 @@ bool Game::init()
       case 6:
         this->addChild(goal.create(x1,x2));
         break;
+        //Add background
       case 7:
-        if(x1==1){
-          background = Sprite::create("citytrace.png");
-        }
-        else if(x1==2){
-          background = Sprite::create("citytrace2.png");
-        }
-        else if(x1==3){
-          background = Sprite::create("citytrace3.png");
-        }
-        else if(x1==4){
-          background = Sprite::create("citytrace4.png");
-        }
-        else if(x1==5){
-          background = Sprite::create("citytrace5.png");
-        }
-        else{
-          //Default case
-          background = Sprite::create("citytrace.png");
-        }
+        background = Sprite::create(bgLut[(int)x1]);
         background->retain();
         this->addChild(background,-1);
+        break;
+        //Start bgm
+      case 8:
+        audio = CocosDenshion::SimpleAudioEngine::getInstance();
+        audio->playBackgroundMusic(muLut[(int)x1], true);
+        audio->preloadEffect("jump.wav");
+        audio->setBackgroundMusicVolume(10.0f);
+        audio->setEffectsVolume(0.5f);
         break;
     }
   }
@@ -171,13 +162,6 @@ bool Game::init()
   
   // Creating Keyboard listener
   this->_eventDispatcher->addEventListenerWithSceneGraphPriority(receiver.create(),this);
-  
-  //Start BGM
-  audio = CocosDenshion::SimpleAudioEngine::getInstance();
-  audio->playBackgroundMusic("bg1.mp3", true);
-  audio->preloadEffect("jump.wav");
-  audio->setBackgroundMusicVolume(10.0f);
-  audio->setEffectsVolume(0.5f);
 
   this->scheduleUpdate();
   return true;
