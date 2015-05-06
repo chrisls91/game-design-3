@@ -34,10 +34,11 @@ private:
 
 class CompleteMenu : public cocos2d::Layer{
 public:
-    static cocos2d::Scene* createScene(float score);
+    static cocos2d::Scene* createScene(float score, int level);
     virtual bool init() override;
     CREATE_FUNC(CompleteMenu);
     void setScore(float value);
+    void setLevel(int level);
     void menuNextCallback();
     void menuPostToBoardCallback();
     void menuReplayCallback();
@@ -45,6 +46,7 @@ public:
 private:
     Size winSize;
     float score = 0;
+    int level = 0;
     CocosDenshion::SimpleAudioEngine* audio;
     ParticleSystemQuad* emitter;
 };
