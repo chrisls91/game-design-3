@@ -69,7 +69,7 @@ bool LeaderBoard::init(){
   request->release();
   */
   
-  string results = exec("curl -i -H \"Accept: application/json\" \"localhost:8000/index.php/leaders\" ");
+  string results = exec("curl -i -H \"Accept: application/json\" \"http://warmuffin.com/index.php/leaders\" ");
   std::size_t found = results.find("[");
   
   results = results.substr(found, results.size() - 2);
@@ -229,7 +229,7 @@ void PostToLeaderBoard::lbSubmitCallback(){
   auto scene = MainMenu::createScene();
   
   auto request = new cocos2d::network::HttpRequest();
-  request->setUrl("http://localhost:8000/index.php/leaders");
+  request->setUrl("http://warmuffin.com/index.php/leaders");
   request->setRequestType(cocos2d::network::HttpRequest::Type::POST);
   std::vector<std::string> headers;
   headers.push_back("Content-Type: application/json; charset=utf-8");
