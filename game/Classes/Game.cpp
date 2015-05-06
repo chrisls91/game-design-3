@@ -268,7 +268,7 @@ void Game::update(float dt){
     Director::getInstance()->replaceScene(tmpScene);
   }
   if(p.x > endX){
-    auto scene = CompleteMenu::createScene(time);
+    auto scene = CompleteMenu::createScene(time, level);
     Director::getInstance()->replaceScene(scene);
   }
 }
