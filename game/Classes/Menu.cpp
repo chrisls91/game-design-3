@@ -261,15 +261,17 @@ bool LevelSelect::init(){
     labelConfig.distanceFieldEnabled = false;
     
     auto lvl1Label = Label::createWithTTF(labelConfig, "First delivery");
-    auto lvl2Label = Label::createWithTTF(labelConfig, "Bad part of town");
+  auto lvl2Label = Label::createWithTTF(labelConfig, "Bad part of town");
+  auto lvl3Label = Label::createWithTTF(labelConfig, "Ouch, a spider bit me");
     auto lvl4Label = Label::createWithTTF(labelConfig, "Wreckage");
     
     auto lvl1Btn = MenuItemLabel::create(lvl1Label, CC_CALLBACK_0(LevelSelect::level1Callback, this));
-    auto lvl2Btn = MenuItemLabel::create(lvl2Label, CC_CALLBACK_0(LevelSelect::level2Callback, this));
+  auto lvl2Btn = MenuItemLabel::create(lvl2Label, CC_CALLBACK_0(LevelSelect::level2Callback, this));
+  auto lvl3Btn = MenuItemLabel::create(lvl3Label, CC_CALLBACK_0(LevelSelect::level3Callback, this));
     auto lvl4Btn = MenuItemLabel::create(lvl4Label, CC_CALLBACK_0(LevelSelect::level4Callback, this));
 
     
-    auto menu = Menu::create(lvl1Btn,lvl2Btn,lvl4Btn,NULL);
+    auto menu = Menu::create(lvl1Btn,lvl2Btn,lvl3Btn,lvl4Btn,NULL);
     
     menu->setPosition(winSize.width/2,winSize.height/2);
     menu->setColor(Color3B(255,255,255));
@@ -293,8 +295,15 @@ void LevelSelect::level2Callback(){
     Director::getInstance()->replaceScene(scene);
 }
 
+
 void LevelSelect::level4Callback(){
     Game::setLevel(4);
     auto scene = Game::createScene();
     Director::getInstance()->replaceScene(scene);
+}
+
+void LevelSelect::level3Callback(){
+  Game::setLevel(3);
+  auto scene = Game::createScene();
+  Director::getInstance()->replaceScene(scene);
 }
