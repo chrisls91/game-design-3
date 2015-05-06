@@ -130,9 +130,25 @@ bool Game::init()
       case 7:
         if(x1==1){
           background = Sprite::create("citytrace.png");
-          background->retain();
-          this->addChild(background,-1);
         }
+        else if(x1==2){
+          background = Sprite::create("citytrace2.png");
+        }
+        else if(x1==3){
+          background = Sprite::create("citytrace3.png");
+        }
+        else if(x1==4){
+          background = Sprite::create("citytrace4.png");
+        }
+        else if(x1==5){
+          background = Sprite::create("citytrace5.png");
+        }
+        else{
+          //Default case
+          background = Sprite::create("citytrace.png");
+        }
+        background->retain();
+        this->addChild(background,-1);
         break;
     }
   }
@@ -216,7 +232,7 @@ void Game::update(float dt){
   Point p = player.getPosition();
   camera.update(Vec3(p.x, p.y, 0));
   
-  background->setPosition(p.x,(winSize.height/2)+40);
+  background->setPosition(p.x,(winSize.height/2)+20);
 
   // Updating player velocity
   if(player.getCurrentVelocity()>player.getNormalVelocity()){
