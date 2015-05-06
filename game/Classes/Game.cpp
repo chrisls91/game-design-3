@@ -88,6 +88,7 @@ bool Game::init()
   ifstream source;
   //string levelStr = "Resources/data/data" + to_string(level);
   string levelStr = "data/data" + to_string(level);
+  levelStr = FileUtils::getInstance()->fullPathForFilename(levelStr);
   source.open(levelStr, ios_base::in);
   
   if(!source)
@@ -215,8 +216,7 @@ void Game::update(float dt){
   // Updating camera, following player
   Point p = player.getPosition();
   camera.update(Vec3(p.x, p.y, 0));
-  
-  background->setPosition(p.x,(winSize.height/2)+20);
+  background->setPosition(p.x,(winSize.height/2+20));
 
   // Updating player velocity
   if(player.getCurrentVelocity()>player.getNormalVelocity()){
