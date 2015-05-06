@@ -8,6 +8,8 @@
 USING_NS_CC;
 using namespace std;
 
+int Game::level = 1;
+
 // Collision Detection
 bool Game::onContactBegin(PhysicsContact& contact)
 {
@@ -44,11 +46,15 @@ bool Game::onContactBegin(PhysicsContact& contact)
     return true;
 }
 
+void Game::setLevel(int lvl){
+    level = lvl;
+}
+
 Scene* Game::createScene()
 {
     auto scene = Scene::createWithPhysics();
     auto layer = Game::create();
-    scene->addChild(layer);   
+    scene->addChild(layer,1,1);
     // Increasing Gravity
     scene->getPhysicsWorld()->setGravity(Vec2(0,-500));
     return scene;
@@ -76,6 +82,7 @@ bool Game::init()
 
   Obstacles obs;
   SpeedPickup pickup;
+  FinishPickup goal;
 
   float startX, startY;
   ifstream source;
@@ -92,30 +99,57 @@ bool Game::init()
     float x1, x2, x3;
     in >> option >> x1 >> x2 >> x3 >> x4;
     switch(option){
-      // Setting start position
-    case 0:
-      startX = x1;
-      startY = x2;
-      break;
-      // Adding ground type 1
-    case 1:
-      this->addChild(obs.create(x1, x2, x3, GROUND_TAG, x4));
-      break;
-      // Adding ground type 2
-    case 2:
-      this->addChild(obs.create(x1, x2, x3, GROUND2_TAG, x4));
-      break;
-      // Adding Wall
-    case 3:
-      this->addChild(obs.create(x1, x2, x3, WALL_TAG, x4));
-      break;
-      // Adding PickUps
-    case 4:
-      this->addChild(pickup.createSpeedPickup(x1, x2));
-      break;
-    case 5:
-      endX = x1;
-      break;
+        // Setting start position
+      case 0:
+        startX = x1;
+        startY = x2;
+        break;
+        // Adding ground type 1
+      case 1:
+        this->addChild(obs.create(x1, x2, x3, GROUND_TAG, x4));
+        break;
+        // Adding ground type 2
+      case 2:
+        this->addChild(obs.create(x1, x2, x3, GROUND2_TAG, x4));
+        break;
+        // Adding Wall
+      case 3:
+        this->addChild(obs.create(x1, x2, x3, WALL_TAG, x4));
+        break;
+        // Adding PickUps
+      case 4:
+        this->addChild(pickup.createSpeedPickup(x1, x2));
+        break;
+      case 5:
+        endX = x1;
+        break;
+        //Add finish goal
+      case 6:
+        this->addChild(goal.create(x1,x2));
+        break;
+      case 7:
+        if(x1==1){
+          background = Sprite::create("citytrace.png");
+        }
+        else if(x1==2){
+          background = Sprite::create("citytrace2.png");
+        }
+        else if(x1==3){
+          background = Sprite::create("citytrace3.png");
+        }
+        else if(x1==4){
+          background = Sprite::create("citytrace4.png");
+        }
+        else if(x1==5){
+          background = Sprite::create("citytrace5.png");
+        }
+        else{
+          //Default case
+          background = Sprite::create("citytrace.png");
+        }
+        background->retain();
+        this->addChild(background,-1);
+        break;
     }
   }
  
@@ -197,6 +231,8 @@ void Game::update(float dt){
   // Updating camera, following player
   Point p = player.getPosition();
   camera.update(Vec3(p.x, p.y, 0));
+  
+  background->setPosition(p.x,(winSize.height/2)+20);
 
   // Updating player velocity
   if(player.getCurrentVelocity()>player.getNormalVelocity()){
