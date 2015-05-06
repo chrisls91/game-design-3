@@ -6,10 +6,7 @@
 5 = Final place
 6 = goal sprite
 7 = background
-
-// To do
-6 = Music
-7 = BackGround
+8 = music
 
 
 // Patterns
@@ -37,3 +34,5 @@
 6 float float | x position, y position
 
 7 int | background id
+
+8 int | music id
