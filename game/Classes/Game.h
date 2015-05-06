@@ -34,6 +34,7 @@ class Game : public cocos2d::Layer
     float time = 0.0;
     Player player;
     Node* wall;
+    Sprite* background;
     Size winSize;
     Label* label;
     CocosDenshion::SimpleAudioEngine* audio;

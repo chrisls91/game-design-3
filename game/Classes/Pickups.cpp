@@ -42,16 +42,16 @@ void SpeedPickup::setPosition(float x, float y){
 
 SpriteBatchNode* FinishPickup::create(float x_pos, float y_pos){
     // Create pickup sprite
-    SpriteBatchNode* spritebatch = SpriteBatchNode::create("finish_placeholder.png");
-    Sprite = Sprite::create("finish_placeholder.png");
+    SpriteBatchNode* spritebatch = SpriteBatchNode::create("goal.png");
+    Sprite = Sprite::create("goal.png");
     spritebatch->addChild(Sprite);
     Sprite->setTag(9);
     //Sprite->getContentSize()
-    auto physicsBody = PhysicsBody::createBox(Size(60,318), PhysicsMaterial(1.0f,0.0f,0.f));
-    physicsBody->setContactTestBitmask(0x01);
-    physicsBody->setRotationEnable(false);
-    physicsBody->setGravityEnable(false);
-    Sprite->setPhysicsBody(physicsBody);
+//    auto physicsBody = PhysicsBody::createBox(Size(60,318), PhysicsMaterial(1.0f,0.0f,0.f));
+//    physicsBody->setContactTestBitmask(0x01);
+//    physicsBody->setRotationEnable(false);
+//    physicsBody->setGravityEnable(false);
+//    Sprite->setPhysicsBody(physicsBody);
     Sprite->setPosition(x_pos,y_pos);
     return spritebatch;
 }

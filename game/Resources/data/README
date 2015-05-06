@@ -4,6 +4,8 @@
 3 = Wall
 4 = PickUp
 5 = Final place
+6 = goal sprite
+7 = background
 
 // To do
 6 = Music
@@ -31,3 +33,7 @@
 4 => Add PickUp
 
 4 float float | x postion, y position
+
+6 float float | x position, y position
+
+7 int | background id
